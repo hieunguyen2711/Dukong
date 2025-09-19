@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Users, GraduationCap, Calendar, Mail, Search, X } from "lucide-react";
+import SchedulingConflicts from "../components/SchedulingConflicts";
 
 interface Student {
   id: string;
@@ -170,8 +171,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Students Grid */}
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Students Grid */}
         {filteredStudents.length === 0 && searchQuery ? (
           <div className="text-center py-12">
             <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -191,7 +193,9 @@ export default function Home() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Student Directory</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredStudents.map((student) => (
               <Link
                 key={student.id}
@@ -280,8 +284,14 @@ export default function Home() {
                 </div>
               </Link>
             ))}
+            </div>
           </div>
         )}
+
+        {/* Scheduling Conflicts Section */}
+        <div className="mt-12">
+          <SchedulingConflicts />
+        </div>
       </div>
     </div>
   );
