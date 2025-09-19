@@ -11,20 +11,16 @@ export default function handler(req, res) {
 
     // Validate required fields
     if (!studentId || !semester || !course) {
-      return res
-        .status(400)
-        .json({
-          message: "Missing required fields: studentId, semester, course",
-        });
+      return res.status(400).json({
+        message: "Missing required fields: studentId, semester, course",
+      });
     }
 
     // Validate course object
     if (!course.course_id || !course.title || !course.credits) {
-      return res
-        .status(400)
-        .json({
-          message: "Invalid course object. Required: course_id, title, credits",
-        });
+      return res.status(400).json({
+        message: "Invalid course object. Required: course_id, title, credits",
+      });
     }
 
     // Read the students.json file

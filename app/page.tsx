@@ -131,7 +131,7 @@ export default function Home() {
               </div>
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
-                <span>Academic Year 2024-2025</span>
+                <span>Academic Year 2025-2026</span>
               </div>
             </div>
 

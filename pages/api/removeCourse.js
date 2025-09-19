@@ -11,11 +11,9 @@ export default function handler(req, res) {
 
     // Validate required fields
     if (!studentId || !semester || !courseId) {
-      return res
-        .status(400)
-        .json({
-          message: "Missing required fields: studentId, semester, courseId",
-        });
+      return res.status(400).json({
+        message: "Missing required fields: studentId, semester, courseId",
+      });
     }
 
     // Read the students.json file

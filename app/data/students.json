@@ -74,7 +74,7 @@
             "number": "113",
             "title": "Intro to Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -97,7 +97,8 @@
     },
     "totalCredits": 24,
     "completedCredits": 18,
-    "plannedCredits": 6
+    "inProgressCredits": 3,
+    "plannedCredits": 3
   },
   {
     "id": "S002",
@@ -128,7 +129,7 @@
             "number": "222",
             "title": "Foundations of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C005",
@@ -136,7 +137,7 @@
             "number": "360",
             "title": "Foundations of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 8,
@@ -171,11 +172,19 @@
         ],
         "semesterCredits": 10,
         "semesterStatus": "future"
+      },
+      "sp2025": {
+        "courses": [],
+        "semesterCredits": 0,
+        "semesterStatus": "past",
+        "isGapSemester": true,
+        "gapReason": "Gap year - personal reasons"
       }
     },
     "totalCredits": 21,
     "completedCredits": 3,
-    "plannedCredits": 18
+    "inProgressCredits": 8,
+    "plannedCredits": 10
   },
   {
     "id": "S003",
@@ -236,7 +245,7 @@
             "number": "115",
             "title": "Intro to Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C017",
@@ -244,7 +253,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C004",
@@ -252,7 +261,7 @@
             "number": "264",
             "title": "Advanced Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 9,
@@ -275,7 +284,8 @@
     },
     "totalCredits": 24,
     "completedCredits": 12,
-    "plannedCredits": 12
+    "inProgressCredits": 9,
+    "plannedCredits": 3
   },
   {
     "id": "S004",
@@ -320,7 +330,7 @@
             "number": "222",
             "title": "Foundations of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 4,
@@ -351,7 +361,8 @@
     },
     "totalCredits": 16,
     "completedCredits": 6,
-    "plannedCredits": 10
+    "inProgressCredits": 4,
+    "plannedCredits": 6
   },
   {
     "id": "S005",
@@ -404,7 +415,7 @@
             "number": "275",
             "title": "Foundations of History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C020",
@@ -412,7 +423,7 @@
             "number": "126",
             "title": "Principles of History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C021",
@@ -420,7 +431,7 @@
             "number": "149",
             "title": "Foundations of Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 9,
@@ -467,7 +478,8 @@
     },
     "totalCredits": 30,
     "completedCredits": 9,
-    "plannedCredits": 21
+    "inProgressCredits": 9,
+    "plannedCredits": 12
   },
   {
     "id": "S006",
@@ -528,7 +540,7 @@
             "number": "193",
             "title": "Foundations of Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C011",
@@ -536,7 +548,7 @@
             "number": "178",
             "title": "Principles of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C017",
@@ -544,7 +556,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 10,
@@ -567,7 +579,8 @@
     },
     "totalCredits": 26,
     "completedCredits": 12,
-    "plannedCredits": 14
+    "inProgressCredits": 10,
+    "plannedCredits": 4
   },
   {
     "id": "S007",
@@ -628,7 +641,7 @@
             "number": "149",
             "title": "Foundations of Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -659,7 +672,8 @@
     },
     "totalCredits": 23,
     "completedCredits": 13,
-    "plannedCredits": 10
+    "inProgressCredits": 3,
+    "plannedCredits": 7
   },
   {
     "id": "S008",
@@ -720,7 +734,7 @@
             "number": "115",
             "title": "Intro to Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C009",
@@ -728,7 +742,7 @@
             "number": "454",
             "title": "Foundations of Mathematics",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C011",
@@ -736,7 +750,7 @@
             "number": "178",
             "title": "Principles of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 11,
@@ -775,7 +789,8 @@
     },
     "totalCredits": 33,
     "completedCredits": 12,
-    "plannedCredits": 21
+    "inProgressCredits": 11,
+    "plannedCredits": 10
   },
   {
     "id": "S009",
@@ -841,10 +856,18 @@
         ],
         "semesterCredits": 3,
         "semesterStatus": "future"
+      },
+      "fa2025": {
+        "courses": [],
+        "semesterCredits": 0,
+        "semesterStatus": "current",
+        "isGapSemester": true,
+        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 15,
     "completedCredits": 12,
+    "inProgressCredits": 0,
     "plannedCredits": 3
   },
   {
@@ -890,7 +913,7 @@
             "number": "421",
             "title": "Principles of Chemistry",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 4,
@@ -921,7 +944,8 @@
     },
     "totalCredits": 17,
     "completedCredits": 6,
-    "plannedCredits": 11
+    "inProgressCredits": 4,
+    "plannedCredits": 7
   },
   {
     "id": "S011",
@@ -990,7 +1014,7 @@
             "number": "336",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -1021,7 +1045,8 @@
     },
     "totalCredits": 24,
     "completedCredits": 15,
-    "plannedCredits": 9
+    "inProgressCredits": 3,
+    "plannedCredits": 6
   },
   {
     "id": "S012",
@@ -1066,7 +1091,7 @@
             "number": "454",
             "title": "Foundations of Mathematics",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 4,
@@ -1097,7 +1122,8 @@
     },
     "totalCredits": 18,
     "completedCredits": 6,
-    "plannedCredits": 12
+    "inProgressCredits": 4,
+    "plannedCredits": 8
   },
   {
     "id": "S013",
@@ -1150,7 +1176,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -1173,7 +1199,8 @@
     },
     "totalCredits": 15,
     "completedCredits": 9,
-    "plannedCredits": 6
+    "inProgressCredits": 3,
+    "plannedCredits": 3
   },
   {
     "id": "S014",
@@ -1258,7 +1285,7 @@
             "number": "266",
             "title": "Advanced Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C006",
@@ -1266,7 +1293,7 @@
             "number": "186",
             "title": "Intro to Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C002",
@@ -1274,7 +1301,7 @@
             "number": "473",
             "title": "Topics in Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C015",
@@ -1282,7 +1309,7 @@
             "number": "115",
             "title": "Intro to Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C023",
@@ -1290,7 +1317,7 @@
             "number": "278",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C007",
@@ -1298,7 +1325,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 18,
@@ -1321,7 +1348,8 @@
     },
     "totalCredits": 42,
     "completedCredits": 21,
-    "plannedCredits": 21
+    "inProgressCredits": 18,
+    "plannedCredits": 3
   },
   {
     "id": "S015",
@@ -1368,7 +1396,7 @@
             "number": "408",
             "title": "Foundations of Chemistry",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -1395,11 +1423,19 @@
         ],
         "semesterCredits": 7,
         "semesterStatus": "future"
+      },
+      "sp2025": {
+        "courses": [],
+        "semesterCredits": 0,
+        "semesterStatus": "past",
+        "isGapSemester": true,
+        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 19,
     "completedCredits": 9,
-    "plannedCredits": 10
+    "inProgressCredits": 3,
+    "plannedCredits": 7
   },
   {
     "id": "S016",
@@ -1460,7 +1496,7 @@
             "number": "266",
             "title": "Advanced Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C022",
@@ -1468,7 +1504,7 @@
             "number": "421",
             "title": "Principles of Chemistry",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 7,
@@ -1477,7 +1513,8 @@
     },
     "totalCredits": 20,
     "completedCredits": 13,
-    "plannedCredits": 7
+    "inProgressCredits": 7,
+    "plannedCredits": 0
   },
   {
     "id": "S017",
@@ -1530,7 +1567,7 @@
             "number": "336",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C014",
@@ -1538,7 +1575,7 @@
             "number": "416",
             "title": "Intro to Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C016",
@@ -1546,7 +1583,7 @@
             "number": "275",
             "title": "Foundations of History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C019",
@@ -1554,7 +1591,7 @@
             "number": "443",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C009",
@@ -1562,7 +1599,7 @@
             "number": "454",
             "title": "Foundations of Mathematics",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C020",
@@ -1570,7 +1607,7 @@
             "number": "126",
             "title": "Principles of History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 19,
@@ -1601,7 +1638,8 @@
     },
     "totalCredits": 35,
     "completedCredits": 10,
-    "plannedCredits": 25
+    "inProgressCredits": 19,
+    "plannedCredits": 6
   },
   {
     "id": "S018",
@@ -1653,10 +1691,18 @@
         ],
         "semesterCredits": 9,
         "semesterStatus": "future"
+      },
+      "fa2025": {
+        "courses": [],
+        "semesterCredits": 0,
+        "semesterStatus": "current",
+        "isGapSemester": true,
+        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 12,
     "completedCredits": 3,
+    "inProgressCredits": 0,
     "plannedCredits": 9
   },
   {
@@ -1688,7 +1734,7 @@
             "number": "193",
             "title": "Foundations of Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C003",
@@ -1696,7 +1742,7 @@
             "number": "191",
             "title": "Advanced Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C006",
@@ -1704,7 +1750,7 @@
             "number": "186",
             "title": "Intro to Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 9,
@@ -1727,7 +1773,8 @@
     },
     "totalCredits": 15,
     "completedCredits": 3,
-    "plannedCredits": 12
+    "inProgressCredits": 9,
+    "plannedCredits": 3
   },
   {
     "id": "S020",
@@ -1812,7 +1859,7 @@
             "number": "178",
             "title": "Principles of Writing",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C004",
@@ -1820,7 +1867,7 @@
             "number": "264",
             "title": "Advanced Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C006",
@@ -1828,7 +1875,7 @@
             "number": "186",
             "title": "Intro to Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 10,
@@ -1875,7 +1922,8 @@
     },
     "totalCredits": 44,
     "completedCredits": 21,
-    "plannedCredits": 23
+    "inProgressCredits": 10,
+    "plannedCredits": 13
   },
   {
     "id": "S021",
@@ -1941,10 +1989,18 @@
         ],
         "semesterCredits": 3,
         "semesterStatus": "future"
+      },
+      "fa2025": {
+        "courses": [],
+        "semesterCredits": 0,
+        "semesterStatus": "current",
+        "isGapSemester": true,
+        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 16,
     "completedCredits": 13,
+    "inProgressCredits": 0,
     "plannedCredits": 3
   },
   {
@@ -2014,7 +2070,7 @@
             "number": "336",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C017",
@@ -2022,7 +2078,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 6,
@@ -2069,7 +2125,8 @@
     },
     "totalCredits": 34,
     "completedCredits": 16,
-    "plannedCredits": 18
+    "inProgressCredits": 6,
+    "plannedCredits": 12
   },
   {
     "id": "S023",
@@ -2138,7 +2195,7 @@
             "number": "264",
             "title": "Advanced Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C009",
@@ -2146,7 +2203,7 @@
             "number": "454",
             "title": "Foundations of Mathematics",
             "credits": 4,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 7,
@@ -2185,7 +2242,8 @@
     },
     "totalCredits": 32,
     "completedCredits": 16,
-    "plannedCredits": 16
+    "inProgressCredits": 7,
+    "plannedCredits": 9
   },
   {
     "id": "S024",
@@ -2238,7 +2296,7 @@
             "number": "191",
             "title": "Advanced Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C017",
@@ -2246,7 +2304,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C013",
@@ -2254,7 +2312,7 @@
             "number": "449",
             "title": "Intro to History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C007",
@@ -2262,7 +2320,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 12,
@@ -2293,7 +2351,8 @@
     },
     "totalCredits": 27,
     "completedCredits": 9,
-    "plannedCredits": 18
+    "inProgressCredits": 12,
+    "plannedCredits": 6
   },
   {
     "id": "S025",
@@ -2346,7 +2405,7 @@
             "number": "336",
             "title": "Topics in History",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C001",
@@ -2354,7 +2413,7 @@
             "number": "313",
             "title": "Foundations of Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 6,
@@ -2377,7 +2436,8 @@
     },
     "totalCredits": 18,
     "completedCredits": 9,
-    "plannedCredits": 9
+    "inProgressCredits": 6,
+    "plannedCredits": 3
   },
   {
     "id": "S026",
@@ -2416,7 +2476,7 @@
             "number": "266",
             "title": "Advanced Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C025",
@@ -2424,7 +2484,7 @@
             "number": "193",
             "title": "Foundations of Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C007",
@@ -2432,7 +2492,7 @@
             "number": "340",
             "title": "Intro to Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 9,
@@ -2441,7 +2501,8 @@
     },
     "totalCredits": 15,
     "completedCredits": 6,
-    "plannedCredits": 9
+    "inProgressCredits": 9,
+    "plannedCredits": 0
   },
   {
     "id": "S027",
@@ -2486,7 +2547,7 @@
             "number": "313",
             "title": "Foundations of Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C004",
@@ -2494,7 +2555,7 @@
             "number": "264",
             "title": "Advanced Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           },
           {
             "course_id": "C002",
@@ -2502,7 +2563,7 @@
             "number": "473",
             "title": "Topics in Mathematics",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 9,
@@ -2533,7 +2594,8 @@
     },
     "totalCredits": 23,
     "completedCredits": 7,
-    "plannedCredits": 16
+    "inProgressCredits": 9,
+    "plannedCredits": 7
   },
   {
     "id": "S028",
@@ -2578,7 +2640,7 @@
             "number": "191",
             "title": "Advanced Biology",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -2625,7 +2687,8 @@
     },
     "totalCredits": 21,
     "completedCredits": 6,
-    "plannedCredits": 15
+    "inProgressCredits": 3,
+    "plannedCredits": 12
   },
   {
     "id": "S029",
@@ -2642,7 +2705,7 @@
             "number": "115",
             "title": "Intro to Computing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -2665,7 +2728,8 @@
     },
     "totalCredits": 6,
     "completedCredits": 0,
-    "plannedCredits": 6
+    "inProgressCredits": 3,
+    "plannedCredits": 3
   },
   {
     "id": "S030",
@@ -2734,7 +2798,7 @@
             "number": "264",
             "title": "Advanced Writing",
             "credits": 3,
-            "status": "planned"
+            "status": "in_progress"
           }
         ],
         "semesterCredits": 3,
@@ -2743,6 +2807,7 @@
     },
     "totalCredits": 18,
     "completedCredits": 15,
-    "plannedCredits": 3
+    "inProgressCredits": 3,
+    "plannedCredits": 0
   }
 ]

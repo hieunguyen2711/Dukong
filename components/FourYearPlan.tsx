@@ -9,13 +9,15 @@ interface Course {
   number: string;
   title: string;
   credits: number;
-  status: "taken" | "planned";
+  status: "taken" | "planned" | "in_progress";
 }
 
 interface SemesterData {
   courses: Course[];
   semesterCredits: number;
   semesterStatus: "past" | "current" | "future";
+  isGapSemester?: boolean;
+  gapReason?: string;
 }
 
 interface Student {
@@ -27,6 +29,7 @@ interface Student {
   plan: Record<string, SemesterData>;
   totalCredits: number;
   completedCredits: number;
+  inProgressCredits: number;
   plannedCredits: number;
 }
 
@@ -51,10 +54,15 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   });
   const [addingToSemester, setAddingToSemester] = useState<string | null>(null);
   const [courseSearchQuery, setCourseSearchQuery] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     fetchStudent();
   }, [studentId]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const fetchStudent = async () => {
     try {
@@ -191,13 +199,13 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   const getSemesterStatusColor = (status: string) => {
     switch (status) {
       case "past":
-        return "bg-gray-100 border-gray-300";
+        return "bg-gray-50 border-gray-300";
       case "current":
-        return "bg-blue-50 border-blue-300";
+        return "bg-yellow-50 border-yellow-300";
       case "future":
-        return "bg-green-50 border-green-300";
+        return "bg-slate-50 border-slate-300";
       default:
-        return "bg-gray-100 border-gray-300";
+        return "bg-gray-50 border-gray-300";
     }
   };
 
@@ -214,9 +222,15 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   };
 
   const getCourseStatusColor = (status: string) => {
-    return status === "taken"
-      ? "bg-gray-200 text-gray-800"
-      : "bg-white border border-gray-300";
+    switch (status) {
+      case "taken":
+        return "bg-green-100 border border-green-300 text-green-800";
+      case "in_progress":
+        return "bg-yellow-100 border border-yellow-300 text-yellow-800";
+      case "planned":
+      default:
+        return "bg-blue-100 border border-blue-300 text-blue-800";
+    }
   };
 
   if (loading) {
@@ -249,6 +263,147 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
     );
   }
 
+  // Get the next semester after the given semester
+  const getNextSemester = (semester: string) => {
+    const match = semester.match(/(fa|sp)(\d{4})/);
+    if (!match) return null;
+
+    const [, semesterType, yearStr] = match;
+    const year = parseInt(yearStr);
+
+    if (semesterType === "fa") {
+      return `sp${year + 1}`;
+    } else {
+      return `fa${year}`;
+    }
+  };
+
+  // Find the next semester that should be added
+  const getNextAvailableSemester = () => {
+    if (!isClient) return null;
+
+    const existingSemesters = Object.keys(student.plan);
+    if (existingSemesters.length === 0) {
+      // If no semesters exist, start with current semester
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth() + 1;
+
+      if (currentMonth >= 8) {
+        return `fa${currentYear}`;
+      } else if (currentMonth >= 1 && currentMonth <= 5) {
+        return `sp${currentYear}`;
+      } else {
+        return `fa${currentYear}`;
+      }
+    }
+
+    // Find the latest semester
+    const sortedSemesters = existingSemesters.sort((a, b) => {
+      const aMatch = a.match(/(fa|sp)(\d{4})/);
+      const bMatch = b.match(/(fa|sp)(\d{4})/);
+      if (!aMatch || !bMatch) return 0;
+      const aYear = parseInt(aMatch[2]);
+      const bYear = parseInt(bMatch[2]);
+      if (aYear !== bYear) return bYear - aYear; // Reverse sort for latest first
+      if (aMatch[1] === "fa" && bMatch[1] === "sp") return -1;
+      if (aMatch[1] === "sp" && bMatch[1] === "fa") return 1;
+      return 0;
+    });
+
+    const latestSemester = sortedSemesters[0];
+    return getNextSemester(latestSemester);
+  };
+
+  // Add a new semester
+  const addNewSemester = () => {
+    const nextSemester = getNextAvailableSemester();
+    if (!nextSemester) return;
+
+    const semesterStatus = getSemesterStatus(nextSemester);
+
+    // Create new semester in student plan
+    const updatedStudent: Student = {
+      ...student,
+      plan: {
+        ...student.plan,
+        [nextSemester]: {
+          courses: [],
+          semesterCredits: 0,
+          semesterStatus: semesterStatus,
+        } as SemesterData,
+      },
+    };
+
+    setStudent(updatedStudent);
+  };
+
+  // Delete an empty semester
+  const deleteSemester = (semesterToDelete: string) => {
+    const semesterData = student.plan[semesterToDelete];
+
+    // Only allow deletion of empty semesters
+    if (!semesterData || semesterData.courses.length > 0) {
+      alert("Cannot delete semesters that contain courses");
+      return;
+    }
+
+    // Don't allow deletion of gap semesters
+    if (semesterData.isGapSemester) {
+      alert("Cannot delete gap semesters");
+      return;
+    }
+
+    // Create updated student without the deleted semester
+    const { [semesterToDelete]: deletedSemester, ...remainingPlan } =
+      student.plan;
+    const updatedStudent: Student = {
+      ...student,
+      plan: remainingPlan,
+    };
+
+    setStudent(updatedStudent);
+  };
+
+  // Check if a semester can be deleted
+  const canDeleteSemester = (semester: string) => {
+    const semesterData = student.plan[semester];
+    return (
+      semesterData &&
+      semesterData.courses.length === 0 &&
+      !semesterData.isGapSemester &&
+      semesterData.semesterStatus === "future"
+    );
+  };
+
+  // Helper function to determine semester status
+  const getSemesterStatus = (
+    semester: string
+  ): "past" | "current" | "future" => {
+    if (!isClient) return "future"; // Default to future for SSR
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+
+    const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+    if (!semesterMatch) return "future";
+
+    const [, semesterType, yearStr] = semesterMatch;
+    const year = parseInt(yearStr);
+
+    if (year < currentYear) return "past";
+    if (year > currentYear) return "future";
+
+    // Same year - check semester
+    if (semesterType === "sp") {
+      return currentMonth <= 5 ? "current" : "past";
+    } else {
+      return currentMonth >= 8 ? "current" : "future";
+    }
+  };
+
+  // Just use existing semesters, sorted chronologically
   const semesters = Object.keys(student.plan).sort((a, b) => {
     const aMatch = a.match(/(fa|sp)(\d{4})/);
     const bMatch = b.match(/(fa|sp)(\d{4})/);
@@ -312,6 +467,10 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
                 {student.completedCredits} completed
               </span>{" "}
               •
+              <span className="text-yellow-600 ml-1">
+                {student.inProgressCredits} in progress
+              </span>{" "}
+              •
               <span className="text-blue-600 ml-1">
                 {student.plannedCredits} planned
               </span>
@@ -328,6 +487,53 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
             semesterData.semesterStatus === "future" ||
             semesterData.semesterStatus === "current";
 
+          // Handle gap semesters with special styling
+          if (semesterData.isGapSemester) {
+            return (
+              <div
+                key={semester}
+                className="rounded-lg border-2 border-orange-300 bg-orange-50 p-4"
+              >
+                {/* Gap Semester Header */}
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-orange-700">
+                      {getSemesterDisplayName(semester)}
+                      <span className="ml-2 text-xs bg-orange-200 text-orange-800 px-2 py-1 rounded-full">
+                        GAP
+                      </span>
+                    </h3>
+                    <p className="text-sm text-orange-600">
+                      {semesterData.gapReason || "Gap semester"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Gap Semester Content */}
+                <div className="text-center py-8">
+                  <div className="text-orange-400 mb-2">
+                    <svg
+                      className="w-12 h-12 mx-auto"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-orange-600 mb-2">Gap semester</p>
+                  <p className="text-xs text-orange-500">
+                    {semesterData.gapReason || "No specific reason provided"}
+                  </p>
+                </div>
+              </div>
+            );
+          }
+
+          // Handle regular semesters
           return (
             <div
               key={semester}
@@ -340,20 +546,36 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
                     {getSemesterDisplayName(semester)}
+                    {semesterData.semesterStatus === "current" && (
+                      <span className="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full">
+                        IN PROGRESS
+                      </span>
+                    )}
                   </h3>
                   <p className="text-sm text-gray-600">
                     {semesterData.semesterCredits} credits
                   </p>
                 </div>
-                {canEdit && (
-                  <button
-                    onClick={() => setAddingToSemester(semester)}
-                    className="p-1 text-blue-600 hover:bg-blue-100 rounded"
-                    title="Add Course"
-                  >
-                    <Plus size={20} />
-                  </button>
-                )}
+                <div className="flex space-x-1">
+                  {canEdit && (
+                    <button
+                      onClick={() => setAddingToSemester(semester)}
+                      className="p-1 text-blue-600 hover:bg-blue-100 rounded"
+                      title="Add Course"
+                    >
+                      <Plus size={20} />
+                    </button>
+                  )}
+                  {canDeleteSemester(semester) && (
+                    <button
+                      onClick={() => deleteSemester(semester)}
+                      className="p-1 text-red-600 hover:bg-red-100 rounded"
+                      title="Delete Empty Semester"
+                    >
+                      <X size={20} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* Courses */}
@@ -412,6 +634,32 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
                     </div>
                   </div>
                 ))}
+
+                {/* Empty semester message */}
+                {semesterData.courses.length === 0 && !courseSearchQuery && (
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 mb-2">
+                      <svg
+                        className="w-8 h-8 mx-auto"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {canEdit
+                        ? "No courses planned. Click + to add courses."
+                        : "No courses scheduled"}
+                    </p>
+                  </div>
+                )}
 
                 {/* Add Course Form */}
                 {addingToSemester === semester && (
@@ -495,6 +743,28 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
             </div>
           );
         })}
+
+        {/* Add Semester Button */}
+        {isClient && getNextAvailableSemester() && (
+          <div className="flex items-center justify-center">
+            <button
+              onClick={addNewSemester}
+              className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 hover:border-blue-400 hover:bg-blue-50 transition-colors"
+              title={`Add ${getSemesterDisplayName(
+                getNextAvailableSemester() || ""
+              )}`}
+            >
+              <div className="text-center">
+                <div className="text-gray-400 mb-2">
+                  <Plus className="w-8 h-8 mx-auto" />
+                </div>
+                <p className="text-sm text-gray-600 font-medium">
+                  Add {getSemesterDisplayName(getNextAvailableSemester() || "")}
+                </p>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Course Modal */}
