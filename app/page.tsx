@@ -1,103 +1,288 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Users, GraduationCap, Calendar, Mail, Search, X } from "lucide-react";
+
+interface Student {
+  id: string;
+  name: string;
+  email: string;
+  gradYear: number;
+  expectedGraduation: string;
+  totalCredits: number;
+  completedCredits: number;
+  plannedCredits: number;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [students, setStudents] = useState<Student[]>([]);
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      // Since we don't have a students list API, we'll read the JSON file directly
+      const response = await fetch("/students.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch students data");
+      }
+      const data = await response.json();
+      setStudents(data);
+      setFilteredStudents(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Search functionality
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredStudents(students);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    const filtered = students.filter(
+      (student) =>
+        student.name.toLowerCase().includes(query) ||
+        student.email.toLowerCase().includes(query) ||
+        student.id.toLowerCase().includes(query) ||
+        student.expectedGraduation.toLowerCase().includes(query)
+    );
+    setFilteredStudents(filtered);
+  }, [searchQuery, students]);
+
+  const clearSearch = () => {
+    setSearchQuery("");
+  };
+
+  const getGradYearColor = (gradYear: number) => {
+    const currentYear = new Date().getFullYear();
+    if (gradYear <= currentYear) return "text-red-600 bg-red-50";
+    if (gradYear === currentYear + 1) return "text-orange-600 bg-orange-50";
+    return "text-green-600 bg-green-50";
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="text-lg text-gray-600 mt-4">Loading students...</div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-8 max-w-md">
+          <div className="text-red-800 text-center">
+            <div className="text-lg font-semibold mb-2">
+              Error Loading Students
+            </div>
+            <div className="mb-4">{error}</div>
+            <button
+              onClick={fetchStudents}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex items-center space-x-3">
+            <GraduationCap className="h-8 w-8 text-blue-600" />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Academic Advisor Dashboard
+              </h1>
+              <p className="text-gray-600 mt-1">
+                Manage student four-year plans and track academic progress
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-6 text-sm text-gray-600">
+              <div className="flex items-center space-x-2">
+                <Users className="h-4 w-4" />
+                <span>
+                  {filteredStudents.length} of {students.length} Students
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4" />
+                <span>Academic Year 2024-2025</span>
+              </div>
+            </div>
+
+            {/* Search Component */}
+            <div className="relative max-w-md w-full sm:w-auto">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search students by name, email, or ID..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
+                    title="Clear search"
+                  >
+                    <X className="h-4 w-4 text-gray-400" />
+                  </button>
+                )}
+              </div>
+              {searchQuery && (
+                <div className="absolute top-full left-0 right-0 mt-1 text-xs text-gray-500">
+                  {filteredStudents.length === 0
+                    ? "No students found"
+                    : `${filteredStudents.length} student${
+                        filteredStudents.length === 1 ? "" : "s"
+                      } found`}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Students Grid */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {filteredStudents.length === 0 && searchQuery ? (
+          <div className="text-center py-12">
+            <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No students found
+            </h3>
+            <p className="text-gray-500">
+              No students match your search for "
+              <span className="font-medium">{searchQuery}</span>". Try searching
+              by name, email, student ID, or graduation term.
+            </p>
+            <button
+              onClick={clearSearch}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Clear search
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredStudents.map((student) => (
+              <Link
+                key={student.id}
+                href={`/student/${student.id}`}
+                className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200"
+              >
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {student.name}
+                      </h3>
+                      <div className="flex items-center space-x-1 text-gray-600 mt-1">
+                        <Mail className="h-4 w-4" />
+                        <span className="text-sm">{student.email}</span>
+                      </div>
+                    </div>
+                    <div
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getGradYearColor(
+                        student.gradYear
+                      )}`}
+                    >
+                      {student.gradYear}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">
+                        Expected Graduation:
+                      </span>
+                      <span className="font-medium">
+                        {student.expectedGraduation}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Total Credits:</span>
+                      <span className="font-medium">
+                        {student.totalCredits}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Completed:</span>
+                      <span className="text-green-600 font-medium">
+                        {student.completedCredits}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Planned:</span>
+                      <span className="text-blue-600 font-medium">
+                        {student.plannedCredits}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Academic Progress</span>
+                      <span>
+                        {Math.round(
+                          (student.completedCredits / student.totalCredits) *
+                            100
+                        )}
+                        %
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${
+                            (student.completedCredits / student.totalCredits) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <span className="text-blue-600 text-sm font-medium hover:text-blue-700">
+                      View Four-Year Plan →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
