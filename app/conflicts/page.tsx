@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Users, Calendar, ChevronDown, ChevronUp, RefreshCw, ArrowLeft, TrendingUp, Clock, GraduationCap } from "lucide-react";
+import { Calendar, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import ConflictMatrix from "../../components/ConflictMatrix";
 
 interface Conflict {
   courseA: string;
@@ -18,6 +19,8 @@ interface ConflictsReport {
   semester: string;
   conflicts: Conflict[];
   message?: string;
+  totalOffered?: number;
+  totalPlanned?: number;
 }
 
 export default function ConflictsPage() {
@@ -90,11 +93,6 @@ export default function ConflictsPage() {
 
   const displayedConflicts = showAllConflicts ? report?.conflicts : report?.conflicts?.slice(0, 10);
 
-  // Calculate summary statistics
-  const highPriorityConflicts = report?.conflicts.filter(c => c.conflictLevel >= 0.4).length || 0;
-  const totalStudentsAffected = report?.conflicts.reduce((sum, c) => sum + c.overlap, 0) || 0;
-  const averageConflictLevel = report?.conflicts.length ? 
-    report.conflicts.reduce((sum, c) => sum + c.conflictLevel, 0) / report.conflicts.length : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -142,58 +140,22 @@ export default function ConflictsPage() {
           </div>
         </div>
 
-        {/* Summary Statistics */}
-        {report && !loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <AlertTriangle className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{report.conflicts.length}</div>
-                  <div className="text-sm text-gray-600">Total Conflicts</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-red-600" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{highPriorityConflicts}</div>
-                  <div className="text-sm text-gray-600">High Priority</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Users className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{totalStudentsAffected}</div>
-                  <div className="text-sm text-gray-600">Students Affected</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Clock className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{averageConflictLevel.toFixed(2)}</div>
-                  <div className="text-sm text-gray-600">Avg. Conflict Level</div>
-                </div>
+
+        {/* Course Offering Information */}
+        {report && !loading && !error && report.totalOffered !== undefined && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <Calendar className="h-5 w-5 text-blue-600" />
+              <div className="text-sm text-blue-800">
+                <span className="font-medium">{report.totalOffered}</span> courses offered in {semesters.find(s => s.value === report.semester)?.label} 
+                out of <span className="font-medium">{report.totalPlanned}</span> courses planned by students
               </div>
             </div>
           </div>
         )}
+
+        {/* Conflict Matrix */}
+        <ConflictMatrix semester={selectedSemester} className="mb-8" />
 
         {/* Main Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">

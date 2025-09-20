@@ -1,17 +1,17 @@
 /**
- * SCHEDULING CONFLICTS API
+ * CONFLICT MATRIX API
  * 
- * This API analyzes student course plans for a given semester and identifies
- * scheduling conflicts between courses. It uses a sophisticated conflict scoring
- * system that considers:
- * - Number of students planning to take both courses (overlap)
- * - Course rarity (number of sections offered)
- * - Student seniority (graduation proximity)
+ * This API generates a visual conflict matrix showing conflict scores between
+ * all pairs of courses offered in a specific semester. It creates a 2D grid
+ * where each cell represents the conflict level between two courses.
+ * 
+ * Key Features:
+ * - Only shows courses actually offered in the target semester
+ * - Uses the same conflict calculation formula as the main conflicts API
+ * - Displays conflicts symmetrically (A vs B and B vs A)
+ * - Provides both matrix data and summary statistics
  * 
  * Formula: conflict_score = overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
- * Where:
- * - rarityWeight = 1 / numSections (single-section courses get higher weight)
- * - seniorityWeights: Seniors=2.0, Juniors=1.5, Sophomores/Freshmen=1.0
  */
 
 const fs = require('fs');
@@ -19,7 +19,7 @@ const path = require('path');
 const { isCourseOffered } = require('../../utils/courseOffering.js');
 
 /**
- * Load all required data files for conflict analysis
+ * Load all required data files for conflict matrix generation
  * @returns {Object} Object containing students, courseData, and sectionData
  */
 function loadData() {
@@ -43,17 +43,17 @@ function loadData() {
  */
 function parseCSV(csvContent) {
   const lines = csvContent.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.replace(/'/g, '').trim());
+  const headers = lines[0].split(',').map(h => h.trim());
   const data = [];
   
   // Process each data row (skip header row)
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',').map(v => v.replace(/'/g, '').trim());
+    const values = lines[i].split(',').map(v => v.trim());
     const row = {};
     
     // Map each value to its corresponding header
     headers.forEach((header, index) => {
-      row[header] = values[index];
+      row[header] = values[index] || '';
     });
     data.push(row);
   }
@@ -61,26 +61,15 @@ function parseCSV(csvContent) {
   return data;
 }
 
-/**
- * Extract all courses planned by students for a specific semester
- * @param {Array} students - Array of student objects
- * @param {string} semester - Target semester (e.g., 'sp2026')
- * @returns {Object} Object with course IDs as keys and course enrollment data as values
- */
+// Get courses planned for a specific semester
 function getCoursesForSemester(students, semester) {
   const courseEnrollments = {};
   
-  // Iterate through all students
   students.forEach(student => {
-    // Check if student has a plan for the target semester
     if (student.plan[semester] && student.plan[semester].courses) {
-      // Process each course in the student's plan
       student.plan[semester].courses.forEach(course => {
-        // Only include courses with 'planned' status
         if (course.status === 'planned') {
           const courseKey = course.course_id;
-          
-          // Initialize course entry if it doesn't exist
           if (!courseEnrollments[courseKey]) {
             courseEnrollments[courseKey] = {
               course_id: course.course_id,
@@ -90,8 +79,6 @@ function getCoursesForSemester(students, semester) {
               students: []
             };
           }
-          
-          // Add student to the course's enrollment list
           courseEnrollments[courseKey].students.push({
             id: student.id,
             name: student.name,
@@ -106,42 +93,21 @@ function getCoursesForSemester(students, semester) {
   return courseEnrollments;
 }
 
-/**
- * Calculate how many sections of a course are offered in a specific semester
- * This determines course rarity - fewer sections = higher rarity weight
- * @param {string} courseId - Course identifier (e.g., 'BIO408')
- * @param {Array} sectionData - Array of section data from section.csv
- * @param {string} semester - Target semester (e.g., 'sp2026')
- * @returns {number} Number of sections offered for this course
- */
+// Calculate course rarity based on section availability
 function calculateCourseRarity(courseId, sectionData, semester) {
-  // Filter sections to find those matching the course and semester
-  const sectionsForCourse = sectionData.filter(section => {
-    const courseKey = `${section['dept code']}${section['crs num']}`;
-    return courseKey === courseId && section.sem === semester;
-  });
-  
+  const sectionsForCourse = sectionData.filter(section => 
+    section.course_id === courseId && section.semester === semester
+  );
   return sectionsForCourse.length;
 }
 
-/**
- * Determine if a course is upper-level based on course number
- * Upper-level courses (300+) typically have fewer sections and higher conflict impact
- * @param {string} courseNumber - Course number (e.g., '408', '115')
- * @returns {boolean} True if course is upper-level (300+)
- */
+// Check if course is upper level (300+)
 function isUpperLevel(courseNumber) {
   const num = parseInt(courseNumber);
   return num >= 300;
 }
 
-/**
- * Determine student year classification based on graduation date and current semester
- * This is used to assign seniority weights in conflict calculations
- * @param {Object} student - Student object with gradYear and expectedGraduation
- * @param {string} currentSemester - Current semester (e.g., 'sp2026')
- * @returns {string} Student year: 'Senior', 'Junior', 'Sophomore', or 'Freshman'
- */
+// Determine student year classification based on graduation date and current semester
 function getStudentYear(student, currentSemester) {
   const semesterYear = parseInt(currentSemester.slice(-4));
   const semesterType = currentSemester.slice(0, 2);
@@ -152,7 +118,7 @@ function getStudentYear(student, currentSemester) {
   let yearsUntilGraduation;
   
   if (gradYear === semesterYear) {
-    // Same year - check semester timing
+    // Same year - check semester
     if (semesterType === 'sp' && gradSemester.startsWith('fa')) {
       yearsUntilGraduation = 0.5; // Graduating in fall, currently spring
     } else if (semesterType === 'fa' && gradSemester.startsWith('sp')) {
@@ -161,7 +127,6 @@ function getStudentYear(student, currentSemester) {
       yearsUntilGraduation = 0; // Same semester
     }
   } else {
-    // Different years - calculate difference
     yearsUntilGraduation = gradYear - semesterYear;
     if (semesterType === 'sp' && gradSemester.startsWith('fa')) {
       yearsUntilGraduation -= 0.5; // Adjust for semester difference
@@ -182,96 +147,19 @@ function getStudentYear(student, currentSemester) {
   }
 }
 
-// Calculate seniority impact (students near graduation)
+// Calculate seniority impact
 function calculateSeniorityImpact(students, targetSemester) {
-  const semesterYear = parseInt(targetSemester.slice(-4));
-  const semesterType = targetSemester.slice(0, 2);
-  
+  const currentYear = new Date().getFullYear();
   let seniorCount = 0;
+  
   students.forEach(student => {
     const gradYear = student.gradYear;
-    const gradSemester = student.expectedGraduation;
-    
-    // Check if student is graduating in the same year or very close
-    if (gradYear === semesterYear) {
-      // If it's spring semester and they're graduating in fall, they're seniors
-      if (semesterType === 'sp' && gradSemester.startsWith('fa')) {
-        seniorCount++;
-      }
-      // If it's fall semester and they're graduating in spring, they're seniors
-      else if (semesterType === 'fa' && gradSemester.startsWith('sp')) {
-        seniorCount++;
-      }
-    }
-    // If graduating in the same semester, definitely a senior
-    else if (gradSemester === targetSemester) {
+    if (gradYear <= currentYear + 1) {
       seniorCount++;
     }
   });
   
   return seniorCount;
-}
-
-/**
- * Calculate conflict level for a pair of courses using the sophisticated formula:
- * conflict_score = overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
- * 
- * This formula considers:
- * - Overlap: Number of students planning to take both courses
- * - Rarity: Single-section courses get higher weight (1/numSections)
- * - Seniority: Seniors get 2.0x weight, Juniors 1.5x, others 1.0x
- * 
- * @param {Object} courseA - First course object with students array
- * @param {Object} courseB - Second course object with students array
- * @param {Object} courseEnrollments - All course enrollment data
- * @param {Array} sectionData - Section data from section.csv
- * @param {string} semester - Target semester
- * @returns {number} Conflict score between 0 and 1
- */
-function calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData, semester) {
-  // Step 1: Calculate student overlap between the two courses
-  const overlap = courseA.students.filter(studentA => 
-    courseB.students.some(studentB => studentA.id === studentB.id)
-  ).length;
-  
-  // No overlap means no conflict
-  if (overlap === 0) return 0;
-  
-  // Step 2: Calculate rarity weights (1 / number of sections)
-  // Single-section courses get weight 1.0, multi-section courses get lower weights
-  const numSectionsA = calculateCourseRarity(courseA.course_id, sectionData, semester);
-  const numSectionsB = calculateCourseRarity(courseB.course_id, sectionData, semester);
-  const rarityWeightA = numSectionsA > 0 ? 1 / numSectionsA : 1; // Default to 1 if no sections found
-  const rarityWeightB = numSectionsB > 0 ? 1 / numSectionsB : 1;
-  
-  // Step 3: Calculate average seniority weight for overlapping students
-  const overlappingStudents = courseA.students.filter(studentA => 
-    courseB.students.some(studentB => studentA.id === studentB.id)
-  );
-  
-  // Assign seniority weights based on student year classification
-  const seniorityWeights = overlappingStudents.map(student => {
-    const studentYear = getStudentYear(student, semester);
-    switch (studentYear) {
-      case 'Senior': return 2.0;    // Highest priority - near graduation
-      case 'Junior': return 1.5;    // Medium priority
-      case 'Sophomore':
-      case 'Freshman':
-      default: return 1.0;          // Standard priority
-    }
-  });
-  
-  // Calculate average seniority weight across all overlapping students
-  const avgSeniorityWeight = seniorityWeights.reduce((sum, weight) => sum + weight, 0) / seniorityWeights.length;
-  
-  // Step 4: Apply the conflict formula
-  const conflictScore = overlap * (rarityWeightA + rarityWeightB) * avgSeniorityWeight;
-  
-  // Step 5: Normalize to 0-1 scale for consistency with existing system
-  // Scale factor (10) can be adjusted based on typical conflict scores
-  const normalizedScore = Math.min(conflictScore / 10, 1.0);
-  
-  return Math.round(normalizedScore * 100) / 100; // Round to 2 decimal places
 }
 
 // Generate explanation for conflict
@@ -315,22 +203,62 @@ function generateExplanation(courseA, courseB, overlap, sectionData, semester) {
   return parts.join('; ') + '.';
 }
 
+// Calculate conflict level for a pair of courses using the correct formula:
+// conflict_score = overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
+function calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData, semester) {
+  const overlap = courseA.students.filter(studentA => 
+    courseB.students.some(studentB => studentA.id === studentB.id)
+  ).length;
+  
+  if (overlap === 0) return 0;
+  
+  // Calculate rarity weights: 1 / numSections
+  const numSectionsA = calculateCourseRarity(courseA.course_id, sectionData, semester);
+  const numSectionsB = calculateCourseRarity(courseB.course_id, sectionData, semester);
+  const rarityWeightA = numSectionsA > 0 ? 1 / numSectionsA : 1; // Default to 1 if no sections found
+  const rarityWeightB = numSectionsB > 0 ? 1 / numSectionsB : 1;
+  
+  // Calculate average seniority weight for overlapping students
+  const overlappingStudents = courseA.students.filter(studentA => 
+    courseB.students.some(studentB => studentA.id === studentB.id)
+  );
+  
+  const seniorityWeights = overlappingStudents.map(student => {
+    const studentYear = getStudentYear(student, semester);
+    switch (studentYear) {
+      case 'Senior': return 2.0;
+      case 'Junior': return 1.5;
+      case 'Sophomore':
+      case 'Freshman':
+      default: return 1.0;
+    }
+  });
+  
+  const avgSeniorityWeight = seniorityWeights.reduce((sum, weight) => sum + weight, 0) / seniorityWeights.length;
+  
+  // Apply the formula: overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
+  const conflictScore = overlap * (rarityWeightA + rarityWeightB) * avgSeniorityWeight;
+  
+  // Normalize to 0-1 scale for consistency with existing system
+  // Scale factor can be adjusted based on typical conflict scores
+  const normalizedScore = Math.min(conflictScore / 10, 1.0);
+  
+  return Math.round(normalizedScore * 100) / 100; // Round to 2 decimal places
+}
+
 /**
- * Main function to analyze scheduling conflicts for a given semester
- * This function:
- * 1. Loads all student and course data
- * 2. Analyzes all course pairs for conflicts
- * 3. Returns sorted list of conflicts with detailed explanations
+ * Generate a conflict matrix for courses offered in a specific semester
+ * This function creates a 2D matrix where each cell shows the conflict level
+ * between two courses, plus summary statistics.
  * 
  * @param {string} semester - Target semester (e.g., 'sp2026')
- * @returns {Object} Object containing semester and conflicts array
+ * @returns {Object} Object containing matrix data, course list, and conflicts
  */
-function analyzeSchedulingConflicts(semester) {
-  // Load all required data
+function generateConflictMatrix(semester) {
   const { students, courseData, sectionData } = loadData();
   const courseEnrollments = getCoursesForSemester(students, semester);
   
-  // Parse semester format (e.g., 'sp2026' -> 'Spring 2026')
+  // Parse semester to get year and semester type
   const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
   if (!semesterMatch) {
     throw new Error('Invalid semester format');
@@ -340,40 +268,51 @@ function analyzeSchedulingConflicts(semester) {
   const year = parseInt(yearStr);
   const semesterName = semesterType === 'fa' ? 'Fall' : 'Spring';
   
-  // Filter courses to only include those actually offered in this semester
-  // This ensures we only analyze conflicts that can actually occur
+  // Filter courses to only include those offered in this semester
   const offeredCourses = Object.values(courseEnrollments).filter(course => {
     return isCourseOffered(course.course_id, semesterName, year);
   });
   
-  const courses = offeredCourses; // Use only offered courses for conflict analysis
+  const courseList = offeredCourses.map(course => ({
+    id: course.course_id,
+    code: `${course.department}${course.number}`,
+    title: course.title,
+    department: course.department,
+    number: course.number
+  }));
+  
+  // Sort courses by department and number for consistent ordering
+  courseList.sort((a, b) => {
+    if (a.department !== b.department) {
+      return a.department.localeCompare(b.department);
+    }
+    return parseInt(a.number) - parseInt(b.number);
+  });
+  
+  // Create matrix and collect conflicts using the same logic as main conflicts API
+  const matrix = [];
   const conflicts = [];
   
-  // Step 1: Check all pairs of courses for conflicts
-  // Using nested loops with j = i + 1 to avoid duplicate pairs
-  for (let i = 0; i < courses.length; i++) {
-    for (let j = i + 1; j < courses.length; j++) {
-      const courseA = courses[i];
-      const courseB = courses[j];
+  // Use the exact same logic as the main conflicts API
+  for (let i = 0; i < offeredCourses.length; i++) {
+    for (let j = i + 1; j < offeredCourses.length; j++) {
+      const courseA = offeredCourses[i];
+      const courseB = offeredCourses[j];
       
-      // Calculate student overlap between the two courses
       const overlap = courseA.students.filter(studentA => 
         courseB.students.some(studentB => studentA.id === studentB.id)
       ).length;
       
-      // Only proceed if there's actual student overlap
       if (overlap > 0) {
-        // Step 2: Calculate conflict level using our sophisticated formula
         const conflictLevel = calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData, semester);
         const explanation = generateExplanation(courseA, courseB, overlap, sectionData, semester);
         
-        // Step 3: Generate descriptive impact information
+        // Determine rarity and seniority impact descriptions (same as main API)
         const rarityA = calculateCourseRarity(courseA.course_id, sectionData, semester);
         const rarityB = calculateCourseRarity(courseB.course_id, sectionData, semester);
         const isUpperLevelA = isUpperLevel(courseA.number);
         const isUpperLevelB = isUpperLevel(courseB.number);
         
-        // Determine rarity impact description
         let rarityImpact = '';
         if (rarityA === 1 && rarityB === 1) {
           rarityImpact = 'Both are single-section upper-level';
@@ -385,14 +324,12 @@ function analyzeSchedulingConflicts(semester) {
           rarityImpact = 'Standard course availability';
         }
         
-        // Calculate seniority impact
         const overlappingStudents = courseA.students.filter(studentA => 
           courseB.students.some(studentB => studentA.id === studentB.id)
         );
         const seniorCount = calculateSeniorityImpact(overlappingStudents, semester);
         const seniorityImpact = seniorCount > 0 ? `${seniorCount} graduating senior${seniorCount > 1 ? 's' : ''} affected` : 'No graduating seniors affected';
         
-        // Step 4: Add conflict to results
         conflicts.push({
           courseA: `${courseA.department}${courseA.number}`,
           courseB: `${courseB.department}${courseB.number}`,
@@ -406,39 +343,86 @@ function analyzeSchedulingConflicts(semester) {
     }
   }
   
-  // Step 5: Sort conflicts by conflict level (highest first) for priority ranking
+  // Now create the matrix using the course list order
+  for (let i = 0; i < courseList.length; i++) {
+    const row = [];
+    for (let j = 0; j < courseList.length; j++) {
+      if (i === j) {
+        // Same course - no conflict
+        row.push(0);
+      } else {
+        const courseA = offeredCourses.find(c => c.course_id === courseList[i].id);
+        const courseB = offeredCourses.find(c => c.course_id === courseList[j].id);
+        
+        if (courseA && courseB) {
+          const overlap = courseA.students.filter(studentA => 
+            courseB.students.some(studentB => studentA.id === studentB.id)
+          ).length;
+          
+          if (overlap > 0) {
+            const conflictLevel = calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData, semester);
+            const roundedLevel = Math.round(conflictLevel * 100) / 100;
+            row.push(roundedLevel);
+          } else {
+            row.push(0);
+          }
+        } else {
+          row.push(0);
+        }
+      }
+    }
+    matrix.push(row);
+  }
+  
+  // Sort conflicts by conflict level (highest first)
   conflicts.sort((a, b) => b.conflictLevel - a.conflictLevel);
   
   return {
     semester: semester,
+    courses: courseList,
+    matrix: matrix,
     conflicts: conflicts,
-    totalOffered: offeredCourses.length,
+    totalOffered: courseList.length,
     totalPlanned: Object.keys(courseEnrollments).length
   };
 }
 
+/**
+ * API Handler for Conflict Matrix Endpoint
+ * 
+ * GET /api/conflict-matrix?semester=sp2026
+ * 
+ * Returns a conflict matrix showing conflict scores between all pairs of courses
+ * offered in the specified semester, along with summary statistics.
+ * 
+ * Response includes:
+ * - semester: Target semester
+ * - courses: Array of courses offered in the semester
+ * - matrix: 2D array of conflict scores
+ * - conflicts: Array of unique conflicts with details
+ * - totalOffered: Number of courses offered
+ * - totalPlanned: Number of courses planned by students
+ */
 export default function handler(req, res) {
+  // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  
+
+  // Extract semester parameter from query string
   const { semester } = req.query;
-  
+
+  // Validate required parameter
   if (!semester) {
     return res.status(400).json({ error: 'Semester parameter is required' });
   }
-  
+
   try {
-    const result = analyzeSchedulingConflicts(semester);
-    
-    if (result.conflicts.length === 0) {
-      result.conflicts = [];
-      result.message = 'No significant conflicts detected.';
-    }
-    
-    res.status(200).json(result);
+    // Generate conflict matrix data
+    const matrixData = generateConflictMatrix(semester);
+    res.status(200).json(matrixData);
   } catch (error) {
-    console.error('Error analyzing scheduling conflicts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error generating conflict matrix:', error);
+    res.status(500).json({ error: 'Failed to generate conflict matrix' });
   }
 }
