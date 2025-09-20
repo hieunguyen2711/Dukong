@@ -784,7 +784,6 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
                         <div className="text-xs text-gray-500 mt-1">
                           {course.credits} credits • {course.status}
                         </div>
-                        {getCourseAvailabilityIndicator(course.course_id, semester)}
                       </div>
                       {canEdit && course.status === "planned" && (
                         <div className="flex space-x-1 ml-2">
