@@ -1,0 +1,2863 @@
+[
+  {
+    "id": "S001",
+    "name": "Mike Jones",
+    "email": "mike.jones@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "fa2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C016",
+            "department": "HIST",
+            "number": "275",
+            "title": "Foundations of History",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 24,
+    "completedCredits": 18,
+    "inProgressCredits": 3,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S002",
+    "name": "Quinn Williams",
+    "email": "quinn.williams@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C024",
+            "department": "ENG",
+            "number": "222",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C005",
+            "department": "BIO",
+            "number": "360",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 8,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C013",
+            "department": "HIST",
+            "number": "449",
+            "title": "Intro to History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C005",
+            "department": "BIO",
+            "number": "360",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 21,
+    "completedCredits": 3,
+    "inProgressCredits": 8,
+    "plannedCredits": 10
+  },
+  {
+    "id": "S003",
+    "name": "Alice Johnson",
+    "email": "alice.johnson@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 24,
+    "completedCredits": 12,
+    "inProgressCredits": 9,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S004",
+    "name": "Frank Davis",
+    "email": "frank.davis@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C024",
+            "department": "ENG",
+            "number": "222",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 16,
+    "completedCredits": 6,
+    "inProgressCredits": 4,
+    "plannedCredits": 6
+  },
+  {
+    "id": "S005",
+    "name": "Alice Williams",
+    "email": "alice.williams@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C016",
+            "department": "HIST",
+            "number": "275",
+            "title": "Foundations of History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C021",
+            "department": "CS",
+            "number": "149",
+            "title": "Foundations of Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C016",
+            "department": "HIST",
+            "number": "275",
+            "title": "Foundations of History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C013",
+            "department": "HIST",
+            "number": "449",
+            "title": "Intro to History",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 30,
+    "completedCredits": 9,
+    "inProgressCredits": 9,
+    "plannedCredits": 12
+  },
+  {
+    "id": "S006",
+    "name": "Karl Garcia",
+    "email": "karl.garcia@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C011",
+            "department": "CS",
+            "number": "178",
+            "title": "Principles of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 26,
+    "completedCredits": 12,
+    "inProgressCredits": 10,
+    "plannedCredits": 4
+  },
+  {
+    "id": "S007",
+    "name": "Bob Jones",
+    "email": "bob.jones@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C021",
+            "department": "CS",
+            "number": "149",
+            "title": "Foundations of Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C024",
+            "department": "ENG",
+            "number": "222",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 23,
+    "completedCredits": 13,
+    "inProgressCredits": 3,
+    "plannedCredits": 7
+  },
+  {
+    "id": "S008",
+    "name": "Bob Jones",
+    "email": "bob.jones@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C009",
+            "department": "HIST",
+            "number": "454",
+            "title": "Foundations of Mathematics",
+            "credits": 4,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C011",
+            "department": "CS",
+            "number": "178",
+            "title": "Principles of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 11,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C024",
+            "department": "ENG",
+            "number": "222",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 33,
+    "completedCredits": 12,
+    "inProgressCredits": 11,
+    "plannedCredits": 10
+  },
+  {
+    "id": "S009",
+    "name": "Pam Davis",
+    "email": "pam.davis@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 15,
+    "completedCredits": 12,
+    "inProgressCredits": 0,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S010",
+    "name": "Diana Brown",
+    "email": "diana.brown@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "planned"
+          },
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 17,
+    "completedCredits": 6,
+    "inProgressCredits": 4,
+    "plannedCredits": 7
+  },
+  {
+    "id": "S011",
+    "name": "Lena Johnson",
+    "email": "lena.johnson@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "fa2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C018",
+            "department": "MATH",
+            "number": "336",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 24,
+    "completedCredits": 15,
+    "inProgressCredits": 3,
+    "plannedCredits": 6
+  },
+  {
+    "id": "S012",
+    "name": "Lena Davis",
+    "email": "lena.davis@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C009",
+            "department": "HIST",
+            "number": "454",
+            "title": "Foundations of Mathematics",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C024",
+            "department": "ENG",
+            "number": "222",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "planned"
+          },
+          {
+            "course_id": "C011",
+            "department": "CS",
+            "number": "178",
+            "title": "Principles of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 8,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 18,
+    "completedCredits": 6,
+    "inProgressCredits": 4,
+    "plannedCredits": 8
+  },
+  {
+    "id": "S013",
+    "name": "Oscar Jones",
+    "email": "oscar.jones@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 15,
+    "completedCredits": 9,
+    "inProgressCredits": 3,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S014",
+    "name": "Pam Miller",
+    "email": "pam.miller@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 18,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 42,
+    "completedCredits": 21,
+    "inProgressCredits": 18,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S015",
+    "name": "Bob Wilson",
+    "email": "bob.wilson@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C005",
+            "department": "BIO",
+            "number": "360",
+            "title": "Foundations of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 19,
+    "completedCredits": 9,
+    "inProgressCredits": 3,
+    "plannedCredits": 7
+  },
+  {
+    "id": "S016",
+    "name": "Ivan Brown",
+    "email": "ivan.brown@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "current"
+      }
+    },
+    "totalCredits": 20,
+    "completedCredits": 13,
+    "inProgressCredits": 7,
+    "plannedCredits": 0
+  },
+  {
+    "id": "S017",
+    "name": "Hannah Johnson",
+    "email": "hannah.johnson@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C018",
+            "department": "MATH",
+            "number": "336",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C014",
+            "department": "ENG",
+            "number": "416",
+            "title": "Intro to Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C016",
+            "department": "HIST",
+            "number": "275",
+            "title": "Foundations of History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C009",
+            "department": "HIST",
+            "number": "454",
+            "title": "Foundations of Mathematics",
+            "credits": 4,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 19,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 35,
+    "completedCredits": 10,
+    "inProgressCredits": 19,
+    "plannedCredits": 6
+  },
+  {
+    "id": "S018",
+    "name": "Oscar Miller",
+    "email": "oscar.miller@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C018",
+            "department": "MATH",
+            "number": "336",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 12,
+    "completedCredits": 3,
+    "inProgressCredits": 0,
+    "plannedCredits": 9
+  },
+  {
+    "id": "S019",
+    "name": "Nina Lopez",
+    "email": "nina.lopez@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 15,
+    "completedCredits": 3,
+    "inProgressCredits": 9,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S020",
+    "name": "Bob Garcia",
+    "email": "bob.garcia@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 15,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C011",
+            "department": "CS",
+            "number": "178",
+            "title": "Principles of Writing",
+            "credits": 4,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C009",
+            "department": "HIST",
+            "number": "454",
+            "title": "Foundations of Mathematics",
+            "credits": 4,
+            "status": "planned"
+          },
+          {
+            "course_id": "C014",
+            "department": "ENG",
+            "number": "416",
+            "title": "Intro to Mathematics",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 13,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 44,
+    "completedCredits": 21,
+    "inProgressCredits": 10,
+    "plannedCredits": 13
+  },
+  {
+    "id": "S021",
+    "name": "Alice Williams",
+    "email": "alice.williams@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 16,
+    "completedCredits": 13,
+    "inProgressCredits": 0,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S022",
+    "name": "Alice Garcia",
+    "email": "alice.garcia@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 10,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C018",
+            "department": "MATH",
+            "number": "336",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C014",
+            "department": "ENG",
+            "number": "416",
+            "title": "Intro to Mathematics",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 34,
+    "completedCredits": 16,
+    "inProgressCredits": 6,
+    "plannedCredits": 12
+  },
+  {
+    "id": "S023",
+    "name": "Hannah Garcia",
+    "email": "hannah.garcia@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C009",
+            "department": "HIST",
+            "number": "454",
+            "title": "Foundations of Mathematics",
+            "credits": 4,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 32,
+    "completedCredits": 16,
+    "inProgressCredits": 7,
+    "plannedCredits": 9
+  },
+  {
+    "id": "S024",
+    "name": "Lena Lopez",
+    "email": "lena.lopez@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C013",
+            "department": "HIST",
+            "number": "449",
+            "title": "Intro to History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C013",
+            "department": "HIST",
+            "number": "449",
+            "title": "Intro to History",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 27,
+    "completedCredits": 9,
+    "inProgressCredits": 12,
+    "plannedCredits": 6
+  },
+  {
+    "id": "S025",
+    "name": "Ivan Davis",
+    "email": "ivan.davis@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C018",
+            "department": "MATH",
+            "number": "336",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 18,
+    "completedCredits": 9,
+    "inProgressCredits": 6,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S026",
+    "name": "Frank Lopez",
+    "email": "frank.lopez@college.edu",
+    "gradYear": 2027,
+    "expectedGraduation": "sp2027",
+    "plan": {
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C017",
+            "department": "CHEM",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C012",
+            "department": "CS",
+            "number": "266",
+            "title": "Advanced Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C025",
+            "department": "BIO",
+            "number": "193",
+            "title": "Foundations of Computing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "current"
+      }
+    },
+    "totalCredits": 15,
+    "completedCredits": 6,
+    "inProgressCredits": 9,
+    "plannedCredits": 0
+  },
+  {
+    "id": "S027",
+    "name": "Charlie Brown",
+    "email": "charlie.brown@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C022",
+            "department": "HIST",
+            "number": "421",
+            "title": "Principles of Chemistry",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 4,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C020",
+            "department": "HIST",
+            "number": "126",
+            "title": "Principles of History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "in_progress"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C011",
+            "department": "CS",
+            "number": "178",
+            "title": "Principles of Writing",
+            "credits": 4,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 23,
+    "completedCredits": 7,
+    "inProgressCredits": 9,
+    "plannedCredits": 7
+  },
+  {
+    "id": "S028",
+    "name": "Diana Johnson",
+    "email": "diana.johnson@college.edu",
+    "gradYear": 2025,
+    "expectedGraduation": "fa2025",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "ENG",
+            "number": "313",
+            "title": "Foundations of Writing",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C008",
+            "department": "CS",
+            "number": "113",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C019",
+            "department": "ENG",
+            "number": "443",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "planned"
+          },
+          {
+            "course_id": "C002",
+            "department": "CHEM",
+            "number": "473",
+            "title": "Topics in Mathematics",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 12,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 21,
+    "completedCredits": 6,
+    "inProgressCredits": 3,
+    "plannedCredits": 12
+  },
+  {
+    "id": "S029",
+    "name": "Eve Garcia",
+    "email": "eve.garcia@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C015",
+            "department": "CHEM",
+            "number": "115",
+            "title": "Intro to Computing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "HIST",
+            "number": "191",
+            "title": "Advanced Biology",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 6,
+    "completedCredits": 0,
+    "inProgressCredits": 3,
+    "plannedCredits": 3
+  },
+  {
+    "id": "S030",
+    "name": "Pam Davis",
+    "email": "pam.davis@college.edu",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C010",
+            "department": "BIO",
+            "number": "408",
+            "title": "Foundations of Chemistry",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C023",
+            "department": "HIST",
+            "number": "278",
+            "title": "Topics in History",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C007",
+            "department": "HIST",
+            "number": "340",
+            "title": "Intro to Writing",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C006",
+            "department": "HIST",
+            "number": "186",
+            "title": "Intro to Biology",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 9,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "264",
+            "title": "Advanced Writing",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      }
+    },
+    "totalCredits": 18,
+    "completedCredits": 15,
+    "inProgressCredits": 3,
+    "plannedCredits": 0
+  },
+  {
+    "id": "S031",
+    "name": "Timalma Zakaria",
+    "email": "zakariatimalma@gmail.com",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "CS",
+            "number": "101",
+            "title": "Introduction to Computer Science",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C002",
+            "department": "MATH",
+            "number": "201",
+            "title": "Calculus I",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "CS",
+            "number": "102",
+            "title": "Data Structures",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "101",
+            "title": "English Composition",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C005",
+            "department": "CS",
+            "number": "201",
+            "title": "Algorithms",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "CS",
+            "number": "301",
+            "title": "Software Engineering",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 19,
+    "completedCredits": 13,
+    "inProgressCredits": 3,
+    "plannedCredits": 3
+  }
+]
