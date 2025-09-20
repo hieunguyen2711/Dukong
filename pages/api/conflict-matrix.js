@@ -78,6 +78,46 @@ function isUpperLevel(courseNumber) {
   return num >= 300;
 }
 
+// Determine student year classification based on graduation date and current semester
+function getStudentYear(student, currentSemester) {
+  const semesterYear = parseInt(currentSemester.slice(-4));
+  const semesterType = currentSemester.slice(0, 2);
+  const gradYear = student.gradYear;
+  const gradSemester = student.expectedGraduation;
+  
+  // Calculate years until graduation
+  let yearsUntilGraduation;
+  
+  if (gradYear === semesterYear) {
+    // Same year - check semester
+    if (semesterType === 'sp' && gradSemester.startsWith('fa')) {
+      yearsUntilGraduation = 0.5; // Graduating in fall, currently spring
+    } else if (semesterType === 'fa' && gradSemester.startsWith('sp')) {
+      yearsUntilGraduation = 0.5; // Graduating in spring, currently fall
+    } else {
+      yearsUntilGraduation = 0; // Same semester
+    }
+  } else {
+    yearsUntilGraduation = gradYear - semesterYear;
+    if (semesterType === 'sp' && gradSemester.startsWith('fa')) {
+      yearsUntilGraduation -= 0.5; // Adjust for semester difference
+    } else if (semesterType === 'fa' && gradSemester.startsWith('sp')) {
+      yearsUntilGraduation += 0.5; // Adjust for semester difference
+    }
+  }
+  
+  // Classify based on years until graduation
+  if (yearsUntilGraduation <= 0.5) {
+    return 'Senior';
+  } else if (yearsUntilGraduation <= 1.5) {
+    return 'Junior';
+  } else if (yearsUntilGraduation <= 2.5) {
+    return 'Sophomore';
+  } else {
+    return 'Freshman';
+  }
+}
+
 // Calculate seniority impact
 function calculateSeniorityImpact(students, targetSemester) {
   const currentYear = new Date().getFullYear();
@@ -134,7 +174,8 @@ function generateExplanation(courseA, courseB, overlap, sectionData, semester) {
   return parts.join('; ') + '.';
 }
 
-// Calculate conflict level for a pair of courses
+// Calculate conflict level for a pair of courses using the correct formula:
+// conflict_score = overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
 function calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData, semester) {
   const overlap = courseA.students.filter(studentA => 
     courseB.students.some(studentB => studentA.id === studentB.id)
@@ -142,39 +183,38 @@ function calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData
   
   if (overlap === 0) return 0;
   
-  // Calculate rarity impact
-  const rarityA = calculateCourseRarity(courseA.course_id, sectionData, semester);
-  const rarityB = calculateCourseRarity(courseB.course_id, sectionData, semester);
-  const isUpperLevelA = isUpperLevel(courseA.number);
-  const isUpperLevelB = isUpperLevel(courseB.number);
+  // Calculate rarity weights: 1 / numSections
+  const numSectionsA = calculateCourseRarity(courseA.course_id, sectionData, semester);
+  const numSectionsB = calculateCourseRarity(courseB.course_id, sectionData, semester);
+  const rarityWeightA = numSectionsA > 0 ? 1 / numSectionsA : 1; // Default to 1 if no sections found
+  const rarityWeightB = numSectionsB > 0 ? 1 / numSectionsB : 1;
   
-  let rarityImpact = 0;
-  if (rarityA === 1 && rarityB === 1) {
-    rarityImpact = 0.3;
-  } else if (rarityA === 1 || rarityB === 1) {
-    rarityImpact = 0.15;
-  }
-  
-  if (isUpperLevelA && isUpperLevelB) {
-    rarityImpact += 0.2;
-  } else if (isUpperLevelA || isUpperLevelB) {
-    rarityImpact += 0.1;
-  }
-  
-  // Calculate seniority impact
+  // Calculate average seniority weight for overlapping students
   const overlappingStudents = courseA.students.filter(studentA => 
     courseB.students.some(studentB => studentA.id === studentB.id)
   );
-  const seniorCount = calculateSeniorityImpact(overlappingStudents, semester);
-  const seniorityImpact = seniorCount > 0 ? (seniorCount / overlappingStudents.length) * 0.3 : 0;
   
-  // Base conflict score from overlap
-  const overlapScore = Math.min(overlap / 10, 0.4); // Normalize overlap, max 0.4
+  const seniorityWeights = overlappingStudents.map(student => {
+    const studentYear = getStudentYear(student, semester);
+    switch (studentYear) {
+      case 'Senior': return 2.0;
+      case 'Junior': return 1.5;
+      case 'Sophomore':
+      case 'Freshman':
+      default: return 1.0;
+    }
+  });
   
-  // Total conflict level
-  const conflictLevel = overlapScore + rarityImpact + seniorityImpact;
+  const avgSeniorityWeight = seniorityWeights.reduce((sum, weight) => sum + weight, 0) / seniorityWeights.length;
   
-  return Math.min(conflictLevel, 1.0); // Cap at 1.0
+  // Apply the formula: overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
+  const conflictScore = overlap * (rarityWeightA + rarityWeightB) * avgSeniorityWeight;
+  
+  // Normalize to 0-1 scale for consistency with existing system
+  // Scale factor can be adjusted based on typical conflict scores
+  const normalizedScore = Math.min(conflictScore / 10, 1.0);
+  
+  return Math.round(normalizedScore * 100) / 100; // Round to 2 decimal places
 }
 
 // Generate conflict matrix
