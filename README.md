@@ -11,9 +11,11 @@ A comprehensive Next.js application for academic advisors to manage and visualiz
 - **Four-Year Plan Visualization**: Interactive semester-by-semester course planning
 - **Course Management**: Add, remove, and update planned courses
 - **Academic Progress Tracking**: Real-time credit calculations and completion status
-- **Email Alert System**: Send meeting requests to at-risk students via SendGrid
-- **Course Offering Validation**: Ensures courses are available in selected semesters
+- **Intelligent At-Risk Detection**: Sophisticated algorithm identifies students at risk of not graduating on time
+- **SendGrid Email Integration**: Professional email alerts for at-risk students and meeting requests
+- **Course Offering Validation**: Ensures courses are available in selected semesters using offering patterns
 - **Responsive Design**: Modern UI with Tailwind CSS and Lucide icons
+- **Advanced Sorting & Filtering**: Multi-criteria search and sort functionality
 
 ### 🎯 Core Functionality
 
@@ -21,6 +23,8 @@ A comprehensive Next.js application for academic advisors to manage and visualiz
 2. **API Routes**: RESTful endpoints for student data management
 3. **Interactive UI**: React components for viewing and editing academic plans
 4. **Real-time Updates**: Automatic recalculation of credits and progress
+5. **Email Alerts**: SendGrid integration for automated student communications
+6. **Risk Assessment**: Mathematical analysis of graduation timeline feasibility
 
 ## Project Structure
 
@@ -106,6 +110,112 @@ Dukong/
 
 6. **Open your browser**
    Navigate to `http://localhost:3000`
+
+## SendGrid Email Integration
+
+### What it Does
+
+The system includes a sophisticated email alert system powered by **SendGrid** that helps academic advisors proactively support students who are at risk of not graduating on time.
+
+### Key Features
+
+#### 🎯 **Intelligent At-Risk Detection**
+The system uses a sophisticated algorithm to identify students who may be at risk of not graduating on time:
+
+- **Credit Analysis**: Compares completed credits vs. time remaining
+- **Semester Constraints**: Considers realistic course load limits (15 credits/semester max)
+- **Timeline Assessment**: Evaluates if remaining credits can be completed by graduation date
+- **Early Warning System**: Identifies problems before they become critical
+
+#### 📧 **Professional Email Communications**
+- **Rich HTML Emails**: Beautiful, professional email templates with student progress details
+- **Personalized Content**: Each email includes the student's specific academic information
+- **Progress Dashboard**: Visual representation of completed, in-progress, and planned credits
+- **Action Items**: Clear next steps and advisor contact information
+
+#### 🔄 **Automated Workflows**
+- **Individual Alerts**: Send meeting requests to specific at-risk students
+- **Bulk Communications**: Send alerts to all at-risk students simultaneously
+- **Real-time Processing**: Instant email delivery with error handling and retry logic
+
+### How the At-Risk Algorithm Works
+
+The system evaluates multiple factors to determine if a student is at risk:
+
+1. **Time Remaining Analysis**
+   ```
+   Semesters Remaining = (Graduation Year - Current Year) × 2
+   ```
+
+2. **Credit Feasibility Check**
+   ```
+   Credits Still Needed = 120 - (Completed + In Progress)
+   Max Possible Credits = Semesters Remaining × 15
+   ```
+
+3. **Risk Categories**
+   - **Critical Risk**: Impossible to complete even with maximum course load
+   - **High Risk**: Requires more than typical course load (>12 credits/semester)
+   - **Moderate Risk**: Behind expected progress for their timeline
+   - **On Track**: Meeting or exceeding expected progress
+
+### Email Content Features
+
+Each automated email includes:
+
+- **Student Progress Summary**: Current credit status and completion percentage
+- **Graduation Timeline**: Expected graduation date and time remaining
+- **Meeting Request**: Professional invitation to schedule an advising appointment
+- **Contact Information**: Advisor details and office location
+- **Direct Links**: Link to student's four-year plan for detailed review
+
+### API Endpoints
+
+#### `POST /api/send-alert`
+Sends a meeting request email to a specific student.
+
+**Request Body:**
+```json
+{
+  "student": {
+    "id": "S031",
+    "name": "Timalma Zakaria",
+    "email": "zakariatimalma@gmail.com",
+    "completedCredits": 45,
+    "inProgressCredits": 12,
+    "expectedGraduation": "Spring 2026"
+  },
+  "advisorName": "Dr. Academic Advisor",
+  "alertType": "meeting_request"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Meeting request sent to student successfully",
+  "studentId": "S031",
+  "studentEmail": "zakariatimalma@gmail.com",
+  "advisorName": "Dr. Academic Advisor",
+  "alertType": "meeting_request"
+}
+```
+
+### Configuration Requirements
+
+1. **SendGrid Account**: Free SendGrid account
+2. **API Key**: SendGrid API key with "Mail Send" permissions
+3. **Verified Sender**: Email address verified in SendGrid for sending
+4. **Environment Variable**: `SENDGRID_API_KEY` properly configured
+
+### Security Features
+
+- **Environment Variables**: API keys stored securely, never committed to git
+- **Input Validation**: All email data validated before processing
+- **Error Handling**: Comprehensive error handling with detailed logging
+- **Rate Limiting**: Built-in delays to respect SendGrid rate limits
+
+
 
 ## Data Structure
 
@@ -287,7 +397,9 @@ Get courses available for a specific semester and year.
 - **Frontend**: React 19, TypeScript
 - **Styling**: Tailwind CSS
 - **Icons**: Lucide React
+- **Email Service**: SendGrid API v3
 - **Data Processing**: Node.js file system operations
+- **Environment Management**: dotenv for secure configuration
 
 ## Customization
 
@@ -311,6 +423,15 @@ Get courses available for a specific semester and year.
 1. **Students not loading**: Check that `public/students.json` exists
 2. **API errors**: Ensure `app/data/students.json` is up to date
 3. **Build errors**: Run `npm run build` to check for TypeScript issues
+4. **Email not sending**:
+   - Verify `SENDGRID_API_KEY` is set in `.env.local`
+   - Ensure API key starts with "SG."
+   - Check that sender email is verified in SendGrid
+   - Review server logs for detailed error messages
+5. **Environment variables not loading**:
+   - Ensure `.env.local` is UTF-8 encoded (not UTF-16)
+   - Restart development server after changing environment files
+   - Check for typos in variable names
 
 ### Data Regeneration
 
@@ -325,10 +446,15 @@ cp app/data/students.json public/students.json
 
 - [ ] Course prerequisite validation
 - [ ] Graduation requirement checking
-- [ ] Bulk operations for multiple students
 - [ ] Export functionality (PDF reports)
-- [ ] Advanced filtering and search
+- [ ] SMS notifications via Twilio integration
+- [ ] Calendar integration for meeting scheduling
 - [ ] Integration with external student information systems
+- [ ] Advanced analytics and reporting dashboard
+- [ ] Multi-language email templates
+- [x] ~~Email alert system for at-risk students~~ ✅ **Completed**
+- [x] ~~filtering and search~~ ✅ **Completed**
+- [x] ~~Bulk operations for multiple students~~ ✅ **Completed**
 
 ## Contributing
 
@@ -338,6 +464,4 @@ cp app/data/students.json public/students.json
 4. Test thoroughly
 5. Submit a pull request
 
-## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
