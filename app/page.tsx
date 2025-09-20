@@ -172,6 +172,7 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<"name" | "progress" | "gradYear">(
     "name"
   );
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [showFilters, setShowFilters] = useState(false);
   const [filterGradYear, setFilterGradYear] = useState<string>("all");
   const [filterProgress, setFilterProgress] = useState<string>("all");
@@ -248,77 +249,44 @@ export default function Home() {
 
     // Sorting
     filtered.sort((a, b) => {
+      let result = 0;
+      
       switch (sortBy) {
         case "name":
-          return a.name.localeCompare(b.name);
+          result = a.name.localeCompare(b.name);
+          break;
         case "progress":
-          return b.completedCredits / 120 - a.completedCredits / 120;
+          // Use consistent progress calculation (completed + in progress)
+          const progressA = (a.completedCredits + a.inProgressCredits) / 120;
+          const progressB = (b.completedCredits + b.inProgressCredits) / 120;
+          result = progressB - progressA; // Higher progress first by default
+          break;
         case "gradYear":
-          return a.gradYear - b.gradYear;
+          result = a.gradYear - b.gradYear;
+          break;
         default:
-          return 0;
+          result = 0;
       }
+      
+      // Apply sort direction
+      return sortDirection === "desc" ? -result : result;
     });
 
     setFilteredStudents(filtered);
-  }, [searchQuery, students, filterGradYear, filterProgress, sortBy]);
+  }, [searchQuery, students, filterGradYear, filterProgress, sortBy, sortDirection]);
 
   const clearSearch = () => {
     setSearchQuery("");
   };
 
-  // Meeting request functions
-  const sendSingleMeetingRequest = async (student: Student) => {
-    if (!advisorName.trim()) {
-      setRequestMessage("Please enter your name as the advisor");
-      return;
-    }
-
-    setSendingRequest(true);
-    setRequestMessage("");
-
-    try {
-      await sendStudentMeetingRequest(student, advisorName, "meeting_request");
-      setRequestMessage(`Meeting request sent to ${student.name} successfully`);
-    } catch (error) {
-      setRequestMessage(
-        `Failed to send meeting request: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
-    } finally {
-      setSendingRequest(false);
-    }
-  };
-
-  const handleBulkMeetingRequests = async () => {
-    if (!advisorName.trim()) {
-      setRequestMessage("Please enter your name as the advisor");
-      return;
-    }
-
-    setSendingRequest(true);
-    setRequestMessage("");
-
-    try {
-      const result = await sendBulkMeetingRequests(students, advisorName);
-      if (result.success) {
-        setRequestMessage(
-          `Successfully sent meeting requests to ${result.sentCount} at-risk students`
-        );
-      } else {
-        setRequestMessage(
-          `Sent ${result.sentCount} requests, ${result.errorCount} failed`
-        );
-      }
-    } catch (error) {
-      setRequestMessage(
-        `Failed to send meeting requests: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
-    } finally {
-      setSendingRequest(false);
+  const handleSortChange = (newSortBy: "name" | "progress" | "gradYear") => {
+    if (sortBy === newSortBy) {
+      // Toggle direction if same sort field
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // Set new sort field with default direction
+      setSortBy(newSortBy);
+      setSortDirection("asc");
     }
   };
 
@@ -458,7 +426,7 @@ export default function Home() {
                 <select
                   value={sortBy}
                   onChange={(e) =>
-                    setSortBy(
+                    handleSortChange(
                       e.target.value as "name" | "progress" | "gradYear"
                     )
                   }
@@ -469,6 +437,18 @@ export default function Home() {
                   <option value="progress">Sort by Progress</option>
                   <option value="gradYear">Sort by Grad Year</option>
                 </select>
+
+                <button
+                  onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
+                  className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  aria-label={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
+                  title={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
+                >
+                  <SortAsc className={`h-4 w-4 ${sortDirection === "desc" ? "rotate-180" : ""}`} />
+                  <span className="hidden sm:inline text-sm">
+                    {sortDirection === "asc" ? "A-Z" : "Z-A"}
+                  </span>
+                </button>
               </div>
             </div>
           </div>
