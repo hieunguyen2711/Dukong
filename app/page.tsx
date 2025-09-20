@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Users, GraduationCap, Calendar, Mail, Search, X } from "lucide-react";
-import SchedulingConflicts from "../components/SchedulingConflicts";
+import { Users, Calendar, Mail, Search, X, AlertTriangle } from "lucide-react";
+import { useHighPriorityConflicts } from "../hooks/useHighPriorityConflicts";
 
 interface Student {
   id: string;
@@ -22,6 +22,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const { highPriorityCount } = useHighPriorityConflicts();
 
   useEffect(() => {
     fetchStudents();
@@ -111,16 +112,13 @@ export default function Home() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center space-x-3">
-            <GraduationCap className="h-8 w-8 text-blue-600" />
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Academic Advisor Dashboard
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Manage student four-year plans and track academic progress
-              </p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Academic Advisor Dashboard
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Manage student four-year plans and track academic progress
+            </p>
           </div>
           <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-6 text-sm text-gray-600">
@@ -173,6 +171,43 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Scheduling Conflicts Link */}
+        <div className="mb-8">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <AlertTriangle className="h-6 w-6 text-orange-600" />
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Scheduling Conflicts Report
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    View detailed course scheduling conflicts and student overlap analysis
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                {highPriorityCount > 0 && (
+                  <div className="flex items-center space-x-2 px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium animate-pulse">
+                    <AlertTriangle className="h-4 w-4" />
+                    <span>{highPriorityCount} High Priority</span>
+                  </div>
+                )}
+                <Link
+                  href="/conflicts"
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    highPriorityCount > 0
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                >
+                  View Conflicts Report
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Students Grid */}
         {filteredStudents.length === 0 && searchQuery ? (
           <div className="text-center py-12">
@@ -287,11 +322,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        {/* Scheduling Conflicts Section */}
-        <div className="mt-12">
-          <SchedulingConflicts />
-        </div>
       </div>
     </div>
   );
