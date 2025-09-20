@@ -28,7 +28,9 @@ export default function ConflictsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState("sp2026");
-  const [expandedConflicts, setExpandedConflicts] = useState<Set<number>>(new Set());
+  const [expandedConflicts, setExpandedConflicts] = useState<Set<number>>(
+    new Set()
+  );
   const [showAllConflicts, setShowAllConflicts] = useState(false);
 
   const semesters = [
@@ -43,7 +45,9 @@ export default function ConflictsPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/scheduling-conflicts?semester=${semester}`);
+      const response = await fetch(
+        `/api/scheduling-conflicts?semester=${semester}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch scheduling conflicts");
       }
@@ -91,8 +95,9 @@ export default function ConflictsPage() {
     return "🔵";
   };
 
-  const displayedConflicts = showAllConflicts ? report?.conflicts : report?.conflicts?.slice(0, 10);
-
+  const displayedConflicts = showAllConflicts
+    ? report?.conflicts
+    : report?.conflicts?.slice(0, 10);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,7 +118,9 @@ export default function ConflictsPage() {
               disabled={loading}
               className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+              />
               <span>Refresh</span>
             </button>
           </div>
@@ -125,11 +132,13 @@ export default function ConflictsPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center space-x-4">
             <Calendar className="h-5 w-5 text-gray-400" />
-            <label className="text-lg font-medium text-gray-700">Select Semester:</label>
+            <label className="text-lg font-medium text-gray-700">
+              Select Semester:
+            </label>
             <select
               value={selectedSemester}
               onChange={(e) => setSelectedSemester(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
             >
               {semesters.map((semester) => (
                 <option key={semester.value} value={semester.value}>
@@ -140,15 +149,18 @@ export default function ConflictsPage() {
           </div>
         </div>
 
-
         {/* Course Offering Information */}
         {report && !loading && !error && report.totalOffered !== undefined && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
             <div className="flex items-center space-x-2">
               <Calendar className="h-5 w-5 text-blue-600" />
               <div className="text-sm text-blue-800">
-                <span className="font-medium">{report.totalOffered}</span> courses offered in {semesters.find(s => s.value === report.semester)?.label} 
-                out of <span className="font-medium">{report.totalPlanned}</span> courses planned by students
+                <span className="font-medium">{report.totalOffered}</span>{" "}
+                courses offered in{" "}
+                {semesters.find((s) => s.value === report.semester)?.label}
+                out of{" "}
+                <span className="font-medium">{report.totalPlanned}</span>{" "}
+                courses planned by students
               </div>
             </div>
           </div>
@@ -162,14 +174,18 @@ export default function ConflictsPage() {
           {loading && (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-              <span className="ml-4 text-lg text-gray-600">Analyzing conflicts...</span>
+              <span className="ml-4 text-lg text-gray-600">
+                Analyzing conflicts...
+              </span>
             </div>
           )}
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 m-6">
               <div className="text-red-800">
-                <div className="font-medium text-lg">Error loading conflicts</div>
+                <div className="font-medium text-lg">
+                  Error loading conflicts
+                </div>
                 <div className="text-sm mt-2">{error}</div>
               </div>
             </div>
@@ -195,7 +211,8 @@ export default function ConflictsPage() {
                       Conflict Details
                     </h2>
                     <div className="text-sm text-gray-600">
-                      Showing {displayedConflicts?.length} of {report.conflicts.length} conflicts
+                      Showing {displayedConflicts?.length} of{" "}
+                      {report.conflicts.length} conflicts
                     </div>
                   </div>
 
@@ -213,7 +230,11 @@ export default function ConflictsPage() {
                             <div className="text-2xl">
                               {getConflictLevelIcon(conflict.conflictLevel)}
                             </div>
-                            <div className={`px-4 py-2 rounded-full text-sm font-medium border ${getConflictLevelColor(conflict.conflictLevel)}`}>
+                            <div
+                              className={`px-4 py-2 rounded-full text-sm font-medium border ${getConflictLevelColor(
+                                conflict.conflictLevel
+                              )}`}
+                            >
                               {getConflictLevelLabel(conflict.conflictLevel)}
                             </div>
                             <div>
@@ -221,7 +242,8 @@ export default function ConflictsPage() {
                                 {conflict.courseA} vs {conflict.courseB}
                               </div>
                               <div className="text-sm text-gray-600">
-                                {conflict.overlap} student{conflict.overlap !== 1 ? 's' : ''} affected
+                                {conflict.overlap} student
+                                {conflict.overlap !== 1 ? "s" : ""} affected
                               </div>
                             </div>
                           </div>
@@ -244,20 +266,26 @@ export default function ConflictsPage() {
                         <div className="px-6 pb-6 border-t border-gray-100 bg-gray-50">
                           <div className="pt-6 space-y-4">
                             <div>
-                              <div className="text-sm font-semibold text-gray-700 mb-2">Explanation:</div>
+                              <div className="text-sm font-semibold text-gray-700 mb-2">
+                                Explanation:
+                              </div>
                               <div className="text-sm text-gray-600 bg-white p-3 rounded border">
                                 {conflict.explanation}
                               </div>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
-                                <div className="text-sm font-semibold text-gray-700 mb-2">Course Rarity:</div>
+                                <div className="text-sm font-semibold text-gray-700 mb-2">
+                                  Course Rarity:
+                                </div>
                                 <div className="text-sm text-gray-600 bg-white p-3 rounded border">
                                   {conflict.rarityImpact}
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm font-semibold text-gray-700 mb-2">Seniority Impact:</div>
+                                <div className="text-sm font-semibold text-gray-700 mb-2">
+                                  Seniority Impact:
+                                </div>
                                 <div className="text-sm text-gray-600 bg-white p-3 rounded border">
                                   {conflict.seniorityImpact}
                                 </div>
@@ -299,4 +327,3 @@ export default function ConflictsPage() {
     </div>
   );
 }
-

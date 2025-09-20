@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Users, Calendar, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import {
+  AlertTriangle,
+  Users,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+} from "lucide-react";
 
 interface Conflict {
   courseA: string;
@@ -23,12 +30,16 @@ interface SchedulingConflictsProps {
   className?: string;
 }
 
-export default function SchedulingConflicts({ className = "" }: SchedulingConflictsProps) {
+export default function SchedulingConflicts({
+  className = "",
+}: SchedulingConflictsProps) {
   const [report, setReport] = useState<ConflictsReport | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSemester, setSelectedSemester] = useState("sp2026");
-  const [expandedConflicts, setExpandedConflicts] = useState<Set<number>>(new Set());
+  const [expandedConflicts, setExpandedConflicts] = useState<Set<number>>(
+    new Set()
+  );
   const [showAllConflicts, setShowAllConflicts] = useState(false);
 
   const semesters = [
@@ -39,12 +50,13 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
     { value: "fa2026", label: "Fall 2026" },
   ];
 
-
   const fetchConflicts = async (semester: string) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/scheduling-conflicts?semester=${semester}`);
+      const response = await fetch(
+        `/api/scheduling-conflicts?semester=${semester}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch scheduling conflicts");
       }
@@ -85,10 +97,14 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
     return "Info";
   };
 
-  const displayedConflicts = showAllConflicts ? report?.conflicts : report?.conflicts?.slice(0, 3);
+  const displayedConflicts = showAllConflicts
+    ? report?.conflicts
+    : report?.conflicts?.slice(0, 3);
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}>
+    <div
+      className={`bg-white rounded-lg shadow-sm border border-gray-200 ${className}`}
+    >
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -119,7 +135,7 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
           <select
             value={selectedSemester}
             onChange={(e) => setSelectedSemester(e.target.value)}
-            className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
           >
             {semesters.map((semester) => (
               <option key={semester.value} value={semester.value}>
@@ -156,13 +172,14 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
                 <div className="flex items-center space-x-2">
                   <Calendar className="h-4 w-4 text-gray-400" />
                   <span className="text-gray-600">
-                    {semesters.find(s => s.value === report.semester)?.label}
+                    {semesters.find((s) => s.value === report.semester)?.label}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Users className="h-4 w-4 text-gray-400" />
                   <span className="text-gray-600">
-                    {report.conflicts.length} conflict{report.conflicts.length !== 1 ? 's' : ''} detected
+                    {report.conflicts.length} conflict
+                    {report.conflicts.length !== 1 ? "s" : ""} detected
                   </span>
                 </div>
               </div>
@@ -192,7 +209,11 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getConflictLevelColor(conflict.conflictLevel)}`}>
+                          <div
+                            className={`px-3 py-1 rounded-full text-xs font-medium border ${getConflictLevelColor(
+                              conflict.conflictLevel
+                            )}`}
+                          >
                             {getConflictLevelLabel(conflict.conflictLevel)}
                           </div>
                           <div>
@@ -200,7 +221,8 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
                               {conflict.courseA} vs {conflict.courseB}
                             </div>
                             <div className="text-sm text-gray-600">
-                              {conflict.overlap} student{conflict.overlap !== 1 ? 's' : ''} affected
+                              {conflict.overlap} student
+                              {conflict.overlap !== 1 ? "s" : ""} affected
                             </div>
                           </div>
                         </div>
@@ -223,17 +245,29 @@ export default function SchedulingConflicts({ className = "" }: SchedulingConfli
                       <div className="px-4 pb-4 border-t border-gray-100 bg-gray-50">
                         <div className="pt-4 space-y-3">
                           <div>
-                            <div className="text-sm font-medium text-gray-700 mb-1">Explanation:</div>
-                            <div className="text-sm text-gray-600">{conflict.explanation}</div>
+                            <div className="text-sm font-medium text-gray-700 mb-1">
+                              Explanation:
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {conflict.explanation}
+                            </div>
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <div className="text-sm font-medium text-gray-700 mb-1">Course Rarity:</div>
-                              <div className="text-sm text-gray-600">{conflict.rarityImpact}</div>
+                              <div className="text-sm font-medium text-gray-700 mb-1">
+                                Course Rarity:
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                {conflict.rarityImpact}
+                              </div>
                             </div>
                             <div>
-                              <div className="text-sm font-medium text-gray-700 mb-1">Seniority Impact:</div>
-                              <div className="text-sm text-gray-600">{conflict.seniorityImpact}</div>
+                              <div className="text-sm font-medium text-gray-700 mb-1">
+                                Seniority Impact:
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                {conflict.seniorityImpact}
+                              </div>
                             </div>
                           </div>
                         </div>

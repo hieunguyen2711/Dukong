@@ -441,7 +441,7 @@ export default function Home() {
                     placeholder="Search students by name, email, or ID..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 text-black"
                     aria-label="Search students"
                     aria-describedby="search-results"
                   />
@@ -492,7 +492,7 @@ export default function Home() {
                       e.target.value as "name" | "progress" | "gradYear"
                     )
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
+                  className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
                   aria-label="Sort students by"
                 >
                   <option value="name">Sort by Name</option>
@@ -543,7 +543,7 @@ export default function Home() {
                   id="grad-year-filter"
                   value={filterGradYear}
                   onChange={(e) => setFilterGradYear(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   aria-label="Filter by graduation year"
                 >
                   <option value="all">All Years</option>
@@ -565,7 +565,7 @@ export default function Home() {
                   id="progress-filter"
                   value={filterProgress}
                   onChange={(e) => setFilterProgress(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                   aria-label="Filter by progress level"
                 >
                   <option value="all">All Progress Levels</option>
@@ -716,13 +716,13 @@ export default function Home() {
                           <span className="text-gray-600">
                             Expected Graduation:
                           </span>
-                          <span className="font-medium">
+                          <span className="font-medium text-black">
                             {student.expectedGraduation}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Total Credits:</span>
-                          <span className="font-medium">
+                          <span className="font-medium text-black">
                             {student.totalCredits}
                           </span>
                         </div>
@@ -972,7 +972,7 @@ export default function Home() {
                   value={advisorName}
                   onChange={(e) => setAdvisorName(e.target.value)}
                   placeholder="Dr. Smith"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
                 />
               </div>
 
