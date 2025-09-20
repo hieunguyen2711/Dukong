@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { AlertTriangle, Users, Calendar, ChevronDown, ChevronUp, RefreshCw, ArrowLeft, TrendingUp, Clock, GraduationCap } from "lucide-react";
 import Link from "next/link";
+import ConflictMatrix from "../../components/ConflictMatrix";
 
 interface Conflict {
   courseA: string;
@@ -18,6 +19,8 @@ interface ConflictsReport {
   semester: string;
   conflicts: Conflict[];
   message?: string;
+  totalOffered?: number;
+  totalPlanned?: number;
 }
 
 export default function ConflictsPage() {
@@ -194,6 +197,22 @@ export default function ConflictsPage() {
             </div>
           </div>
         )}
+
+        {/* Course Offering Information */}
+        {report && !loading && !error && report.totalOffered !== undefined && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+            <div className="flex items-center space-x-2">
+              <Calendar className="h-5 w-5 text-blue-600" />
+              <div className="text-sm text-blue-800">
+                <span className="font-medium">{report.totalOffered}</span> courses offered in {semesters.find(s => s.value === report.semester)?.label} 
+                out of <span className="font-medium">{report.totalPlanned}</span> courses planned by students
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Conflict Matrix */}
+        <ConflictMatrix semester={selectedSemester} className="mb-8" />
 
         {/* Main Content */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
