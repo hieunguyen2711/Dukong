@@ -2,7 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Users, GraduationCap, Calendar, Mail, Search, X, Filter, SortAsc, Eye, EyeOff } from "lucide-react";
+import {
+  Users,
+  GraduationCap,
+  Calendar,
+  Mail,
+  Search,
+  X,
+  Filter,
+  SortAsc,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import SchedulingConflicts from "../components/SchedulingConflicts";
 
 interface Student {
@@ -13,8 +24,135 @@ interface Student {
   expectedGraduation: string;
   totalCredits: number;
   completedCredits: number;
+  inProgressCredits: number;
   plannedCredits: number;
 }
+
+// Sophisticated "At Risk" Logic
+const isStudentAtRisk = (student: Student): boolean => {
+  const CREDITS_NEEDED = 120;
+  const MAX_CREDITS_PER_SEMESTER = 15; // Realistic maximum per semester
+  const TYPICAL_CREDITS_PER_SEMESTER = 12; // More conservative estimate
+
+  // Parse graduation term (e.g., "Spring 2025", "Fall 2025", "sp2026", "fa2026")
+  let gradMatch = student.expectedGraduation.match(/(Spring|Fall)\s+(\d{4})/);
+
+  // Handle short format like "sp2026", "fa2026"
+  if (!gradMatch) {
+    const shortMatch = student.expectedGraduation.match(/(sp|fa)(\d{4})/);
+    if (shortMatch) {
+      const [, shortSem, year] = shortMatch;
+      gradMatch = [
+        student.expectedGraduation,
+        shortSem === "sp" ? "Spring" : "Fall",
+        year,
+      ];
+    }
+  }
+
+  if (!gradMatch) return false;
+
+  const [, gradSemester, gradYearStr] = gradMatch;
+  const gradYear = parseInt(gradYearStr);
+
+  // Calculate current semester info
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // 0-based to 1-based
+  const isSpring = currentMonth <= 7; // Jan-July = Spring semester period
+
+  // Calculate semesters remaining until graduation
+  let semestersRemaining = 0;
+
+  if (gradYear > currentYear) {
+    // Graduating in a future year
+    const yearsRemaining = gradYear - currentYear;
+    semestersRemaining = yearsRemaining * 2;
+
+    // Adjust for current semester position and graduation semester
+    if (isSpring && gradSemester === "Spring") {
+      semestersRemaining -= 1; // Spring to Spring
+    } else if (!isSpring && gradSemester === "Fall") {
+      semestersRemaining += 0; // Fall to Fall
+    } else if (isSpring && gradSemester === "Fall") {
+      semestersRemaining -= 0.5; // Spring to Fall (half year less)
+    } else {
+      semestersRemaining -= 1.5; // Fall to Spring (1.5 years less)
+    }
+  } else if (gradYear === currentYear) {
+    // Graduating this year
+    if (gradSemester === "Spring" && isSpring) {
+      semestersRemaining = 1; // Currently in spring, graduating spring
+    } else if (gradSemester === "Fall" && !isSpring) {
+      semestersRemaining = 1; // Currently in fall, graduating fall
+    } else if (gradSemester === "Fall" && isSpring) {
+      semestersRemaining = 1; // Currently in spring, graduating fall
+    } else {
+      semestersRemaining = 0; // Should have already graduated
+    }
+  } else {
+    // Graduation date is in the past
+    return true; // Definitely at risk if past graduation date
+  }
+
+  // Ensure minimum of 0 semesters
+  semestersRemaining = Math.max(0, semestersRemaining);
+
+  // Calculate credits earned and needed
+  const creditsCompleted = student.completedCredits || 0;
+  const creditsInProgress = student.inProgressCredits || 0;
+  const totalCreditsEarnedOrInProgress = creditsCompleted + creditsInProgress;
+  const creditsStillNeeded = Math.max(
+    0,
+    CREDITS_NEEDED - totalCreditsEarnedOrInProgress
+  );
+
+  // Risk assessment scenarios
+
+  // 1. Already past graduation date with insufficient credits
+  if (semestersRemaining <= 0 && creditsStillNeeded > 0) {
+    return true;
+  }
+
+  // 2. No time remaining
+  if (semestersRemaining <= 0) {
+    return false; // Should be graduating, not at risk if they have enough credits
+  }
+
+  // 3. Check if they can realistically complete remaining credits
+  const maxPossibleCredits = semestersRemaining * MAX_CREDITS_PER_SEMESTER;
+  const typicalPossibleCredits =
+    semestersRemaining * TYPICAL_CREDITS_PER_SEMESTER;
+
+  // Definitely at risk if impossible even with max load
+  if (creditsStillNeeded > maxPossibleCredits) {
+    return true;
+  }
+
+  // At risk if they need more than typical course load
+  if (creditsStillNeeded > typicalPossibleCredits) {
+    return true;
+  }
+
+  // 4. Special case: Very close to graduation but behind schedule
+  if (
+    semestersRemaining <= 1 &&
+    creditsStillNeeded > MAX_CREDITS_PER_SEMESTER * 0.8
+  ) {
+    return true; // Need more than 80% of max load in final semester
+  }
+
+  // 5. Early warning: More than 2 years out but significantly behind
+  if (semestersRemaining >= 4) {
+    const expectedCreditsAtThisPoint =
+      (8 - semestersRemaining) * TYPICAL_CREDITS_PER_SEMESTER;
+    if (totalCreditsEarnedOrInProgress < expectedCreditsAtThisPoint * 0.7) {
+      return true; // Less than 70% of expected progress
+    }
+  }
+
+  return false; // Not at risk
+};
 
 export default function Home() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -22,7 +160,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "progress" | "gradYear">("name");
+  const [sortBy, setSortBy] = useState<"name" | "progress" | "gradYear">(
+    "name"
+  );
   const [showFilters, setShowFilters] = useState(false);
   const [filterGradYear, setFilterGradYear] = useState<string>("all");
   const [filterProgress, setFilterProgress] = useState<string>("all");
@@ -95,7 +235,7 @@ export default function Home() {
         case "name":
           return a.name.localeCompare(b.name);
         case "progress":
-          return (b.completedCredits / 120) - (a.completedCredits / 120);
+          return b.completedCredits / 120 - a.completedCredits / 120;
         case "gradYear":
           return a.gradYear - b.gradYear;
         default:
@@ -205,14 +345,16 @@ export default function Home() {
                     </button>
                   )}
                 </div>
-                <div id="search-results" className="absolute top-full left-0 right-0 mt-1 text-xs text-gray-500">
-                  {searchQuery && (
-                    filteredStudents.length === 0
+                <div
+                  id="search-results"
+                  className="absolute top-full left-0 right-0 mt-1 text-xs text-gray-500"
+                >
+                  {searchQuery &&
+                    (filteredStudents.length === 0
                       ? "No students found"
                       : `${filteredStudents.length} student${
                           filteredStudents.length === 1 ? "" : "s"
-                        } found`
-                  )}
+                        } found`)}
                 </div>
               </div>
 
@@ -231,10 +373,14 @@ export default function Home() {
                   <Filter className="h-4 w-4" />
                   <span className="hidden sm:inline">Filters</span>
                 </button>
-                
+
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as "name" | "progress" | "gradYear")}
+                  onChange={(e) =>
+                    setSortBy(
+                      e.target.value as "name" | "progress" | "gradYear"
+                    )
+                  }
                   className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
                   aria-label="Sort students by"
                 >
@@ -254,7 +400,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label htmlFor="grad-year-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="grad-year-filter"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Graduation Year
                 </label>
                 <select
@@ -271,9 +420,12 @@ export default function Home() {
                   <option value="2028">2028</option>
                 </select>
               </div>
-              
+
               <div>
-                <label htmlFor="progress-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="progress-filter"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Progress Level
                 </label>
                 <select
@@ -289,7 +441,7 @@ export default function Home() {
                   <option value="high">High Progress (&gt;75%)</option>
                 </select>
               </div>
-              
+
               <div className="flex items-end">
                 <button
                   onClick={() => {
@@ -331,164 +483,222 @@ export default function Home() {
           </div>
         ) : (
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Student Directory</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Student Directory
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {filteredStudents.map((student, index) => {
-              const progressPercent = Math.round((student.completedCredits / 120) * 100);
-              const isAtRisk = progressPercent < 25 && student.gradYear <= new Date().getFullYear() + 1;
-              
-              return (
-                <Link
-                  key={student.id}
-                  href={`/student/${student.id}`}
-                  className={`bg-white rounded-xl shadow-sm border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    isAtRisk ? "border-red-200 bg-red-50/30" : "border-gray-200"
-                  }`}
-                  aria-label={`View ${student.name}'s academic plan. Progress: ${progressPercent}%`}
-                  tabIndex={0}
-                >
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 truncate">
-                        {student.name}
-                      </h3>
-                      <div className="flex items-center space-x-1 text-gray-600 mt-1">
-                        <Mail className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                        <span className="text-sm truncate">{student.email}</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end space-y-1">
-                      <div
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${getGradYearColor(
-                          student.gradYear
-                        )}`}
-                        aria-label={`Graduation year: ${student.gradYear}`}
-                      >
-                        {student.gradYear}
-                      </div>
-                      {isAtRisk && (
-                        <div className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                          At Risk
+              {filteredStudents.map((student, index) => {
+                const progressPercent = Math.round(
+                  ((student.completedCredits + student.inProgressCredits) /
+                    120) *
+                    100
+                );
+                const isAtRisk = isStudentAtRisk(student);
+
+                return (
+                  <Link
+                    key={student.id}
+                    href={`/student/${student.id}`}
+                    className={`bg-white rounded-xl shadow-sm border transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      isAtRisk
+                        ? "border-red-200 bg-red-50/30"
+                        : "border-gray-200"
+                    }`}
+                    aria-label={`View ${student.name}'s academic plan. Progress: ${progressPercent}%`}
+                    tabIndex={0}
+                  >
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-semibold text-gray-900 truncate">
+                            {student.name}
+                          </h3>
+                          <div className="flex items-center space-x-1 text-gray-600 mt-1">
+                            <Mail
+                              className="h-4 w-4 flex-shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span className="text-sm truncate">
+                              {student.email}
+                            </span>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">
-                        Expected Graduation:
-                      </span>
-                      <span className="font-medium">
-                        {student.expectedGraduation}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Total Credits:</span>
-                      <span className="font-medium">
-                        {student.totalCredits}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Completed:</span>
-                      <span className="text-green-600 font-medium">
-                        {student.completedCredits}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">In Progress:</span>
-                      <span className="text-blue-600 font-medium">
-                        {student.plannedCredits}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Progress Bar */}
-                  <div className="mt-4">
-                    <div className="flex justify-between text-xs text-gray-600 mb-2">
-                      <span className="font-medium">Academic Progress</span>
-                      <span className="font-semibold">
-                        {progressPercent}% Complete
-                      </span>
-                    </div>
-                    <div 
-                      className="w-full bg-gray-200 rounded-full h-3 relative overflow-hidden"
-                      role="progressbar"
-                      aria-valuenow={progressPercent}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-label={`Academic progress: ${progressPercent}% complete`}
-                    >
-                      {/* Completed credits (green) */}
-                      <div
-                        className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-l-full transition-all duration-500 ease-out"
-                        style={{
-                          width: `${(student.completedCredits / 120) * 100}%`,
-                        }}
-                        aria-label={`${student.completedCredits} credits completed`}
-                      ></div>
-                      {/* In progress credits (blue) */}
-                      <div
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 absolute top-0 transition-all duration-500 ease-out"
-                        style={{
-                          left: `${(student.completedCredits / 120) * 100}%`,
-                          width: `${(student.plannedCredits / 120) * 100}%`,
-                        }}
-                        aria-label={`${student.plannedCredits} credits in progress`}
-                      ></div>
-                    </div>
-                    
-                    {/* Progress Legend */}
-                    <div className="flex justify-between text-xs text-gray-500 mt-2">
-                      <div className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span>{student.completedCredits} completed</span>
+                        <div className="flex flex-col items-end space-y-1">
+                          <div
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${getGradYearColor(
+                              student.gradYear
+                            )}`}
+                            aria-label={`Graduation year: ${student.gradYear}`}
+                          >
+                            {student.gradYear}
+                          </div>
+                          {isAtRisk && (
+                            <div className="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                              At Risk
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span>{student.plannedCredits} in progress</span>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">
+                            Expected Graduation:
+                          </span>
+                          <span className="font-medium">
+                            {student.expectedGraduation}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Total Credits:</span>
+                          <span className="font-medium">
+                            {student.totalCredits}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Completed:</span>
+                          <span className="text-green-600 font-medium">
+                            {student.completedCredits}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">In Progress:</span>
+                          <span className="text-yellow-600 font-medium">
+                            {student.inProgressCredits}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Planned:</span>
+                          <span className="text-blue-600 font-medium">
+                            {student.plannedCredits}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Enhanced Progress Bar */}
+                      <div className="mt-4">
+                        <div className="flex justify-between text-xs text-gray-600 mb-2">
+                          <span className="font-medium">Academic Progress</span>
+                          <span className="font-semibold">
+                            {progressPercent}% Complete
+                          </span>
+                        </div>
+                        <div
+                          className="w-full bg-gray-200 rounded-full h-3 relative overflow-hidden"
+                          role="progressbar"
+                          aria-valuenow={progressPercent}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-label={`Academic progress: ${progressPercent}% complete`}
+                        >
+                          {/* Completed credits (green) */}
+                          <div
+                            className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-l-full transition-all duration-500 ease-out"
+                            style={{
+                              width: `${
+                                (student.completedCredits / 120) * 100
+                              }%`,
+                            }}
+                            aria-label={`${student.completedCredits} credits completed`}
+                          ></div>
+                          {/* In progress credits (yellow) */}
+                          <div
+                            className="bg-gradient-to-r from-yellow-500 to-yellow-600 h-3 absolute top-0 transition-all duration-500 ease-out"
+                            style={{
+                              left: `${
+                                (student.completedCredits / 120) * 100
+                              }%`,
+                              width: `${
+                                (student.inProgressCredits / 120) * 100
+                              }%`,
+                            }}
+                            aria-label={`${student.inProgressCredits} credits in progress`}
+                          ></div>
+                          {/* Planned credits (blue) */}
+                          <div
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 absolute top-0 transition-all duration-500 ease-out"
+                            style={{
+                              left: `${
+                                ((student.completedCredits +
+                                  student.inProgressCredits) /
+                                  120) *
+                                100
+                              }%`,
+                              width: `${(student.plannedCredits / 120) * 100}%`,
+                            }}
+                            aria-label={`${student.plannedCredits} credits planned`}
+                          ></div>
+                        </div>
+
+                        {/* Progress Legend */}
+                        <div className="flex justify-between text-xs text-gray-500 mt-2">
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span>{student.completedCredits} completed</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            <span>{student.inProgressCredits} in progress</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span>{student.plannedCredits} planned</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 text-center">
+                        <span className="text-blue-600 text-sm font-medium hover:text-blue-700 transition-colors duration-200">
+                          View Four-Year Plan →
+                        </span>
                       </div>
                     </div>
-                  </div>
-
-                  <div className="mt-4 text-center">
-                    <span className="text-blue-600 text-sm font-medium hover:text-blue-700 transition-colors duration-200">
-                      View Four-Year Plan →
-                    </span>
-                  </div>
-                </div>
-              </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
 
         {/* Summary Dashboard */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Academic Overview</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Academic Overview
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Students</p>
-                  <p className="text-3xl font-bold text-gray-900">{students.length}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Students
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {students.length}
+                  </p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-full">
                   <Users className="h-6 w-6 text-blue-600" />
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Avg Progress</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Avg Progress
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {students.length > 0 
-                      ? Math.round(students.reduce((acc, student) => acc + (student.completedCredits / 120) * 100, 0) / students.length)
-                      : 0}%
+                    {students.length > 0
+                      ? Math.round(
+                          students.reduce(
+                            (acc, student) =>
+                              acc + (student.completedCredits / 120) * 100,
+                            0
+                          ) / students.length
+                        )
+                      : 0}
+                    %
                   </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-full">
@@ -496,16 +706,16 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">At Risk</p>
                   <p className="text-3xl font-bold text-red-600">
-                    {students.filter(student => {
-                      const progress = (student.completedCredits / 120) * 100;
-                      return progress < 25 && student.gradYear <= new Date().getFullYear() + 1;
-                    }).length}
+                    {
+                      students.filter((student) => isStudentAtRisk(student))
+                        .length
+                    }
                   </p>
                 </div>
                 <div className="p-3 bg-red-100 rounded-full">
@@ -513,16 +723,18 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">On Track</p>
                   <p className="text-3xl font-bold text-green-600">
-                    {students.filter(student => {
-                      const progress = (student.completedCredits / 120) * 100;
-                      return progress >= 75;
-                    }).length}
+                    {
+                      students.filter((student) => {
+                        const progress = (student.completedCredits / 120) * 100;
+                        return progress >= 75;
+                      }).length
+                    }
                   </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-full">

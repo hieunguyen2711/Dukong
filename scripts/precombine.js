@@ -250,18 +250,32 @@ async function precombineData() {
       // Calculate total credits and add metadata
       let totalCredits = 0;
       let completedCredits = 0;
+      let inProgressCredits = 0;
       let plannedCredits = 0;
 
       Object.keys(studentObj.plan).forEach((semester) => {
         let semesterCredits = 0;
+        const semesterStatus = getSemesterStatus(semester);
+
         studentObj.plan[semester].forEach((course) => {
           totalCredits += course.credits;
           semesterCredits += course.credits;
 
+          // Update course status based on semester
           if (course.status === "taken") {
-            completedCredits += course.credits;
-          } else {
-            plannedCredits += course.credits;
+            if (semesterStatus === "current") {
+              course.status = "in_progress";
+              inProgressCredits += course.credits;
+            } else {
+              completedCredits += course.credits;
+            }
+          } else if (course.status === "planned") {
+            if (semesterStatus === "current") {
+              course.status = "in_progress";
+              inProgressCredits += course.credits;
+            } else {
+              plannedCredits += course.credits;
+            }
           }
         });
 
@@ -269,12 +283,13 @@ async function precombineData() {
         studentObj.plan[semester] = {
           courses: studentObj.plan[semester],
           semesterCredits: semesterCredits,
-          semesterStatus: getSemesterStatus(semester),
+          semesterStatus: semesterStatus,
         };
       });
 
       studentObj.totalCredits = totalCredits;
       studentObj.completedCredits = completedCredits;
+      studentObj.inProgressCredits = inProgressCredits;
       studentObj.plannedCredits = plannedCredits;
 
       students.push(studentObj);
