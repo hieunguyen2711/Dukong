@@ -250,7 +250,7 @@ export default function Home() {
     // Sorting
     filtered.sort((a, b) => {
       let result = 0;
-      
+
       switch (sortBy) {
         case "name":
           result = a.name.localeCompare(b.name);
@@ -267,16 +267,78 @@ export default function Home() {
         default:
           result = 0;
       }
-      
+
       // Apply sort direction
       return sortDirection === "desc" ? -result : result;
     });
 
     setFilteredStudents(filtered);
-  }, [searchQuery, students, filterGradYear, filterProgress, sortBy, sortDirection]);
+  }, [
+    searchQuery,
+    students,
+    filterGradYear,
+    filterProgress,
+    sortBy,
+    sortDirection,
+  ]);
 
   const clearSearch = () => {
     setSearchQuery("");
+  };
+
+  // Meeting request functions
+  const sendSingleMeetingRequest = async (student: Student) => {
+    if (!advisorName.trim()) {
+      setRequestMessage("Please enter your name as the advisor");
+      return;
+    }
+
+    setSendingRequest(true);
+    setRequestMessage("");
+
+    try {
+      await sendStudentMeetingRequest(student, advisorName, "meeting_request");
+      setRequestMessage(`Meeting request sent to ${student.name} successfully`);
+    } catch (error) {
+      setRequestMessage(
+        `Failed to send meeting request: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setSendingRequest(false);
+    }
+  };
+
+  const handleBulkMeetingRequests = async () => {
+    if (!advisorName.trim()) {
+      setRequestMessage("Please enter your name as the advisor");
+      return;
+    }
+
+    setSendingRequest(true);
+    setRequestMessage("");
+
+    try {
+      const result = await sendBulkMeetingRequests(students, advisorName);
+      if (result.success) {
+        setRequestMessage(
+          `Successfully sent meeting requests to ${result.sentCount} at-risk students`
+        );
+      } else {
+        setRequestMessage(
+          `Sent ${result.sentCount} requests, ${result.errorCount} failed`
+        );
+      }
+    } catch (error) {
+      setRequestMessage(
+        `Failed to send meeting requests: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setSendingRequest(false);
+    }
   };
 
   const handleSortChange = (newSortBy: "name" | "progress" | "gradYear") => {
@@ -439,12 +501,22 @@ export default function Home() {
                 </select>
 
                 <button
-                  onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
+                  onClick={() =>
+                    setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+                  }
                   className="flex items-center gap-1 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
-                  aria-label={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
-                  title={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
+                  aria-label={`Sort ${
+                    sortDirection === "asc" ? "descending" : "ascending"
+                  }`}
+                  title={`Sort ${
+                    sortDirection === "asc" ? "descending" : "ascending"
+                  }`}
                 >
-                  <SortAsc className={`h-4 w-4 ${sortDirection === "desc" ? "rotate-180" : ""}`} />
+                  <SortAsc
+                    className={`h-4 w-4 ${
+                      sortDirection === "desc" ? "rotate-180" : ""
+                    }`}
+                  />
                   <span className="hidden sm:inline text-sm">
                     {sortDirection === "asc" ? "A-Z" : "Z-A"}
                   </span>
