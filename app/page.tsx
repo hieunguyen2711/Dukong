@@ -473,7 +473,8 @@ export default function Home() {
                     Scheduling Conflicts Report
                   </h2>
                   <p className="text-gray-600 text-sm">
-                    View detailed course scheduling conflicts and student overlap analysis
+                    View detailed course scheduling conflicts and student
+                    overlap analysis
                   </p>
                 </div>
               </div>
