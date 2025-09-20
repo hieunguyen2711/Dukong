@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Trash2, Plus, Edit3, Save, X, Search } from "lucide-react";
+import { Trash2, Plus, Edit3, Save, X, Search, AlertTriangle, Info } from "lucide-react";
+import { validateCourseSelection, getOfferingDescription } from "../utils/courseOfferingClient.js";
 
 interface Course {
   course_id: string;
@@ -55,6 +56,12 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   const [addingToSemester, setAddingToSemester] = useState<string | null>(null);
   const [courseSearchQuery, setCourseSearchQuery] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [courseValidationErrors, setCourseValidationErrors] = useState<Record<string, string>>({});
+  const [courseOfferings, setCourseOfferings] = useState<Record<string, string>>({});
+  const [addFormValidation, setAddFormValidation] = useState<{semester: string, validation: any} | null>(null);
+  const [availableCourses, setAvailableCourses] = useState<Record<string, any[]>>({});
+  const [courseDropdownSearch, setCourseDropdownSearch] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState("");
 
   useEffect(() => {
     fetchStudent();
@@ -63,6 +70,102 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    const loadCourseOfferings = async () => {
+      if (student && isClient) {
+        const offerings: Record<string, string> = {};
+        const allCourses = Object.values(student.plan)
+          .flatMap(semesterData => semesterData.courses)
+          .map(course => course.course_id);
+
+        const uniqueCourses = [...new Set(allCourses)];
+
+        for (const courseId of uniqueCourses) {
+          try {
+            const description = await getOfferingDescription(courseId);
+            offerings[courseId] = description;
+          } catch (error) {
+            console.error(`Error getting offering for ${courseId}:`, error);
+            offerings[courseId] = 'Unknown availability';
+          }
+        }
+
+        setCourseOfferings(offerings);
+      }
+    };
+
+    loadCourseOfferings();
+  }, [student, isClient]);
+
+  const validateNewCourseInput = async (semester: string, courseId: string) => {
+    if (!courseId.trim() || !semester) {
+      setAddFormValidation(null);
+      return;
+    }
+
+    const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+    if (!semesterMatch) {
+      setAddFormValidation(null);
+      return;
+    }
+
+    const [, semesterType, yearStr] = semesterMatch;
+    const year = parseInt(yearStr);
+    const semesterName = semesterType === "fa" ? "Fall" : "Spring";
+
+    const semesterStatus = getSemesterStatus(semester);
+    if (semesterStatus === "future") {
+      try {
+        const validation = await validateCourseSelection(courseId, semesterName, year);
+        const offering = await getOfferingDescription(courseId);
+
+        setAddFormValidation({
+          semester,
+          validation: {
+            ...validation,
+            offering: offering
+          }
+        });
+      } catch (error) {
+        console.error("Error validating course input:", error);
+        setAddFormValidation(null);
+      }
+    } else {
+      setAddFormValidation(null);
+    }
+  };
+
+  const loadAvailableCoursesForSemester = async (semester: string) => {
+    if (availableCourses[semester]) {
+      return availableCourses[semester];
+    }
+
+    const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+    if (!semesterMatch) return [];
+
+    const [, semesterType, yearStr] = semesterMatch;
+    const year = parseInt(yearStr);
+    const semesterName = semesterType === "fa" ? "Fall" : "Spring";
+
+    try {
+      const response = await fetch(`/api/available-courses?semester=${semesterName}&year=${year}`);
+      if (!response.ok) {
+        throw new Error('Failed to load available courses');
+      }
+
+      const data = await response.json();
+      setAvailableCourses(prev => ({
+        ...prev,
+        [semester]: data.courses
+      }));
+
+      return data.courses;
+    } catch (error) {
+      console.error('Error loading available courses:', error);
+      return [];
+    }
+  };
 
   const fetchStudent = async () => {
     try {
@@ -99,11 +202,23 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (errorData.type === "offering_validation_error") {
+          setCourseValidationErrors(prev => ({
+            ...prev,
+            [`${semester}-${course.course_id}`]: errorData.message
+          }));
+        }
         throw new Error(errorData.message || "Failed to add course");
       }
 
       const updatedStudent = await response.json();
       setStudent(updatedStudent);
+
+      setCourseValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[`${semester}-${course.course_id}`];
+        return newErrors;
+      });
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to add course");
     }
@@ -171,12 +286,40 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
   };
 
   const handleAddCourse = async (semester: string) => {
-    if (!newCourse.course_id || !newCourse.title) {
-      alert("Please fill in course ID and title");
+    const courseToAdd = selectedCourseId ?
+      availableCourses[semester]?.find(c => c.course_id === selectedCourseId) :
+      newCourse;
+
+    if (!courseToAdd || !courseToAdd.course_id) {
+      alert("Please select a course");
       return;
     }
 
-    await addCourse(semester, newCourse);
+    const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+    if (semesterMatch) {
+      const [, semesterType, yearStr] = semesterMatch;
+      const year = parseInt(yearStr);
+      const semesterName = semesterType === "fa" ? "Fall" : "Spring";
+
+      const semesterStatus = getSemesterStatus(semester);
+      if (semesterStatus === "future") {
+        try {
+          const validation = await validateCourseSelection(courseToAdd.course_id, semesterName, year);
+          if (!validation.valid) {
+            setCourseValidationErrors(prev => ({
+              ...prev,
+              [`${semester}-${courseToAdd.course_id}`]: validation.message
+            }));
+            alert(validation.message);
+            return;
+          }
+        } catch (error) {
+          console.error("Error validating course:", error);
+        }
+      }
+    }
+
+    await addCourse(semester, courseToAdd);
     setNewCourse({
       course_id: "",
       department: "",
@@ -185,6 +328,9 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
       credits: 3,
     });
     setAddingToSemester(null);
+    setAddFormValidation(null);
+    setSelectedCourseId("");
+    setCourseDropdownSearch("");
   };
 
   const getSemesterDisplayName = (semester: string) => {
@@ -231,6 +377,39 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
       default:
         return "bg-blue-100 border border-blue-300 text-blue-800";
     }
+  };
+
+  const getCourseAvailabilityIndicator = (courseId: string, semester: string) => {
+    const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+    if (!semesterMatch) return null;
+
+    const [, semesterType, yearStr] = semesterMatch;
+    const year = parseInt(yearStr);
+    const semesterName = semesterType === "fa" ? "Fall" : "Spring";
+
+    const validationKey = `${semester}-${courseId}`;
+    const hasError = courseValidationErrors[validationKey];
+
+    if (hasError) {
+      return (
+        <div className="flex items-center mt-1">
+          <AlertTriangle className="h-3 w-3 text-red-500 mr-1" />
+          <span className="text-xs text-red-600">Not offered this semester</span>
+        </div>
+      );
+    }
+
+    const offering = courseOfferings[courseId];
+    if (offering) {
+      return (
+        <div className="flex items-center mt-1">
+          <Info className="h-3 w-3 text-blue-500 mr-1" />
+          <span className="text-xs text-blue-600">{offering}</span>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   if (loading) {
@@ -605,6 +784,7 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
                         <div className="text-xs text-gray-500 mt-1">
                           {course.credits} credits • {course.status}
                         </div>
+                        {getCourseAvailabilityIndicator(course.course_id, semester)}
                       </div>
                       {canEdit && course.status === "planned" && (
                         <div className="flex space-x-1 ml-2">
@@ -663,81 +843,22 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
 
                 {/* Add Course Form */}
                 {addingToSemester === semester && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                    <div className="space-y-2">
-                      <input
-                        type="text"
-                        placeholder="Course ID (e.g., CS101)"
-                        value={newCourse.course_id}
-                        onChange={(e) =>
-                          setNewCourse({
-                            ...newCourse,
-                            course_id: e.target.value,
-                          })
-                        }
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Department (e.g., CS)"
-                        value={newCourse.department}
-                        onChange={(e) =>
-                          setNewCourse({
-                            ...newCourse,
-                            department: e.target.value,
-                          })
-                        }
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Course Number (e.g., 101)"
-                        value={newCourse.number}
-                        onChange={(e) =>
-                          setNewCourse({ ...newCourse, number: e.target.value })
-                        }
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Course Title"
-                        value={newCourse.title}
-                        onChange={(e) =>
-                          setNewCourse({ ...newCourse, title: e.target.value })
-                        }
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                      />
-                      <input
-                        type="number"
-                        placeholder="Credits"
-                        value={newCourse.credits}
-                        onChange={(e) =>
-                          setNewCourse({
-                            ...newCourse,
-                            credits: parseInt(e.target.value) || 3,
-                          })
-                        }
-                        className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
-                        min="1"
-                        max="6"
-                      />
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleAddCourse(semester)}
-                          className="flex-1 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                        >
-                          <Save size={14} className="inline mr-1" />
-                          Add
-                        </button>
-                        <button
-                          onClick={() => setAddingToSemester(null)}
-                          className="px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded hover:bg-gray-400"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <CourseSelectionForm
+                    semester={semester}
+                    availableCourses={availableCourses[semester] || []}
+                    selectedCourseId={selectedCourseId}
+                    setSelectedCourseId={setSelectedCourseId}
+                    courseDropdownSearch={courseDropdownSearch}
+                    setCourseDropdownSearch={setCourseDropdownSearch}
+                    onAddCourse={handleAddCourse}
+                    onCancel={() => {
+                      setAddingToSemester(null);
+                      setAddFormValidation(null);
+                      setSelectedCourseId("");
+                      setCourseDropdownSearch("");
+                    }}
+                    onLoadCourses={loadAvailableCoursesForSemester}
+                  />
                 )}
               </div>
             </div>
@@ -866,6 +987,172 @@ const FourYearPlan: React.FC<FourYearPlanProps> = ({ studentId }) => {
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+interface CourseSelectionFormProps {
+  semester: string;
+  availableCourses: any[];
+  selectedCourseId: string;
+  setSelectedCourseId: (id: string) => void;
+  courseDropdownSearch: string;
+  setCourseDropdownSearch: (search: string) => void;
+  onAddCourse: (semester: string) => void;
+  onCancel: () => void;
+  onLoadCourses: (semester: string) => Promise<any[]>;
+}
+
+const CourseSelectionForm: React.FC<CourseSelectionFormProps> = ({
+  semester,
+  availableCourses,
+  selectedCourseId,
+  setSelectedCourseId,
+  courseDropdownSearch,
+  setCourseDropdownSearch,
+  onAddCourse,
+  onCancel,
+  onLoadCourses
+}) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      if (availableCourses.length === 0) {
+        setLoading(true);
+        await onLoadCourses(semester);
+        setLoading(false);
+      }
+    };
+    loadCourses();
+  }, [semester, availableCourses.length, onLoadCourses]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const filteredCourses = availableCourses.filter(course => {
+    const searchLower = courseDropdownSearch.toLowerCase();
+    return (
+      course.course_id.toLowerCase().includes(searchLower) ||
+      course.department.toLowerCase().includes(searchLower) ||
+      course.number.toLowerCase().includes(searchLower) ||
+      course.title.toLowerCase().includes(searchLower)
+    );
+  });
+
+  const selectedCourse = availableCourses.find(c => c.course_id === selectedCourseId);
+
+  return (
+    <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+      <div className="space-y-3">
+        <div className="text-sm font-medium text-blue-800 mb-2">
+          Add Course to {semester.replace(/(fa|sp)(\d{4})/, (match, sem, year) => {
+            const semName = sem === 'fa' ? 'Fall' : 'Spring';
+            return `${semName} ${year}`;
+          })}
+        </div>
+
+        {loading ? (
+          <div className="text-center py-4">
+            <div className="text-sm text-gray-600">Loading available courses...</div>
+          </div>
+        ) : (
+          <>
+            {/* Course Search/Selection */}
+            <div className="relative" ref={dropdownRef}>
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={courseDropdownSearch}
+                onChange={(e) => {
+                  setCourseDropdownSearch(e.target.value);
+                  setIsDropdownOpen(true);
+                }}
+                onFocus={() => setIsDropdownOpen(true)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+
+              {isDropdownOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                  {filteredCourses.length === 0 ? (
+                    <div className="px-3 py-2 text-sm text-gray-500">
+                      {availableCourses.length === 0 ? 'No courses available for this semester' : 'No courses match your search'}
+                    </div>
+                  ) : (
+                    filteredCourses.map((course) => (
+                      <div
+                        key={course.course_id}
+                        onClick={() => {
+                          setSelectedCourseId(course.course_id);
+                          setCourseDropdownSearch(`${course.department} ${course.number} - ${course.title}`);
+                          setIsDropdownOpen(false);
+                        }}
+                        className="px-3 py-2 cursor-pointer hover:bg-blue-50 border-b border-gray-100"
+                      >
+                        <div className="text-sm font-medium text-gray-900">
+                          {course.department} {course.number}
+                        </div>
+                        <div className="text-xs text-gray-600">{course.title}</div>
+                        <div className="text-xs text-blue-600">{course.credits} credits</div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Selected Course Details */}
+            {selectedCourse && (
+              <div className="bg-green-50 border border-green-200 rounded p-2">
+                <div className="text-sm font-medium text-green-800">
+                  Selected: {selectedCourse.department} {selectedCourse.number}
+                </div>
+                <div className="text-xs text-green-700">{selectedCourse.title}</div>
+                <div className="text-xs text-green-600">{selectedCourse.credits} credits</div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex space-x-2">
+              <button
+                onClick={() => onAddCourse(semester)}
+                disabled={!selectedCourseId}
+                className={`flex-1 px-3 py-2 text-sm rounded font-medium ${
+                  selectedCourseId
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <Save size={14} className="inline mr-1" />
+                Add Course
+              </button>
+              <button
+                onClick={onCancel}
+                className="px-3 py-2 bg-gray-300 text-gray-700 text-sm rounded hover:bg-gray-400"
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {/* Available Courses Count */}
+            <div className="text-xs text-gray-600 mt-2">
+              {availableCourses.length} courses available for this semester
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { validateCourseSelection } from "../../utils/courseOffering.js";
 
 export default function handler(req, res) {
   if (req.method !== "POST") {
@@ -57,6 +58,25 @@ export default function handler(req, res) {
       return res
         .status(400)
         .json({ message: "Course already exists in this semester" });
+    }
+
+    // Validate course offering for future semesters
+    const semesterStatus = getSemesterStatus(semester);
+    if (semesterStatus === "future") {
+      const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+      if (semesterMatch) {
+        const [, semesterType, yearStr] = semesterMatch;
+        const year = parseInt(yearStr);
+        const semesterName = semesterType === "fa" ? "Fall" : "Spring";
+
+        const validation = validateCourseSelection(course.course_id, semesterName, year);
+        if (!validation.valid) {
+          return res.status(400).json({
+            message: validation.message,
+            type: "offering_validation_error"
+          });
+        }
+      }
     }
 
     // Add the course with proper status
