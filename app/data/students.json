@@ -172,13 +172,6 @@
         ],
         "semesterCredits": 10,
         "semesterStatus": "future"
-      },
-      "sp2025": {
-        "courses": [],
-        "semesterCredits": 0,
-        "semesterStatus": "past",
-        "isGapSemester": true,
-        "gapReason": "Gap year - personal reasons"
       }
     },
     "totalCredits": 21,
@@ -856,13 +849,6 @@
         ],
         "semesterCredits": 3,
         "semesterStatus": "future"
-      },
-      "fa2025": {
-        "courses": [],
-        "semesterCredits": 0,
-        "semesterStatus": "current",
-        "isGapSemester": true,
-        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 15,
@@ -1423,13 +1409,6 @@
         ],
         "semesterCredits": 7,
         "semesterStatus": "future"
-      },
-      "sp2025": {
-        "courses": [],
-        "semesterCredits": 0,
-        "semesterStatus": "past",
-        "isGapSemester": true,
-        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 19,
@@ -1691,13 +1670,6 @@
         ],
         "semesterCredits": 9,
         "semesterStatus": "future"
-      },
-      "fa2025": {
-        "courses": [],
-        "semesterCredits": 0,
-        "semesterStatus": "current",
-        "isGapSemester": true,
-        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 12,
@@ -1989,13 +1961,6 @@
         ],
         "semesterCredits": 3,
         "semesterStatus": "future"
-      },
-      "fa2025": {
-        "courses": [],
-        "semesterCredits": 0,
-        "semesterStatus": "current",
-        "isGapSemester": true,
-        "gapReason": "Gap semester"
       }
     },
     "totalCredits": 16,
