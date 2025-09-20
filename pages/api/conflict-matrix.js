@@ -1,13 +1,34 @@
+/**
+ * CONFLICT MATRIX API
+ * 
+ * This API generates a visual conflict matrix showing conflict scores between
+ * all pairs of courses offered in a specific semester. It creates a 2D grid
+ * where each cell represents the conflict level between two courses.
+ * 
+ * Key Features:
+ * - Only shows courses actually offered in the target semester
+ * - Uses the same conflict calculation formula as the main conflicts API
+ * - Displays conflicts symmetrically (A vs B and B vs A)
+ * - Provides both matrix data and summary statistics
+ * 
+ * Formula: conflict_score = overlap * (rarityWeightA + rarityWeightB) * avg(seniorityWeights)
+ */
+
 const fs = require('fs');
 const path = require('path');
 const { isCourseOffered } = require('../../utils/courseOffering.js');
 
-// Load data files
+/**
+ * Load all required data files for conflict matrix generation
+ * @returns {Object} Object containing students, courseData, and sectionData
+ */
 function loadData() {
+  // Define paths to data files
   const studentsPath = path.join(process.cwd(), 'app', 'data', 'students.json');
   const coursePath = path.join(process.cwd(), 'app', 'data', 'course.csv');
   const sectionPath = path.join(process.cwd(), 'app', 'data', 'section.csv');
   
+  // Load and parse data files
   const students = JSON.parse(fs.readFileSync(studentsPath, 'utf8'));
   const courseData = parseCSV(fs.readFileSync(coursePath, 'utf8'));
   const sectionData = parseCSV(fs.readFileSync(sectionPath, 'utf8'));
@@ -15,14 +36,22 @@ function loadData() {
   return { students, courseData, sectionData };
 }
 
+/**
+ * Parse CSV content into JavaScript objects
+ * @param {string} csvContent - Raw CSV content as string
+ * @returns {Array} Array of objects with CSV data
+ */
 function parseCSV(csvContent) {
   const lines = csvContent.trim().split('\n');
   const headers = lines[0].split(',').map(h => h.trim());
   const data = [];
   
+  // Process each data row (skip header row)
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',').map(v => v.trim());
     const row = {};
+    
+    // Map each value to its corresponding header
     headers.forEach((header, index) => {
       row[header] = values[index] || '';
     });
@@ -217,7 +246,14 @@ function calculateConflictLevel(courseA, courseB, courseEnrollments, sectionData
   return Math.round(normalizedScore * 100) / 100; // Round to 2 decimal places
 }
 
-// Generate conflict matrix
+/**
+ * Generate a conflict matrix for courses offered in a specific semester
+ * This function creates a 2D matrix where each cell shows the conflict level
+ * between two courses, plus summary statistics.
+ * 
+ * @param {string} semester - Target semester (e.g., 'sp2026')
+ * @returns {Object} Object containing matrix data, course list, and conflicts
+ */
 function generateConflictMatrix(semester) {
   const { students, courseData, sectionData } = loadData();
   const courseEnrollments = getCoursesForSemester(students, semester);
@@ -351,18 +387,38 @@ function generateConflictMatrix(semester) {
   };
 }
 
+/**
+ * API Handler for Conflict Matrix Endpoint
+ * 
+ * GET /api/conflict-matrix?semester=sp2026
+ * 
+ * Returns a conflict matrix showing conflict scores between all pairs of courses
+ * offered in the specified semester, along with summary statistics.
+ * 
+ * Response includes:
+ * - semester: Target semester
+ * - courses: Array of courses offered in the semester
+ * - matrix: 2D array of conflict scores
+ * - conflicts: Array of unique conflicts with details
+ * - totalOffered: Number of courses offered
+ * - totalPlanned: Number of courses planned by students
+ */
 export default function handler(req, res) {
+  // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Extract semester parameter from query string
   const { semester } = req.query;
 
+  // Validate required parameter
   if (!semester) {
     return res.status(400).json({ error: 'Semester parameter is required' });
   }
 
   try {
+    // Generate conflict matrix data
     const matrixData = generateConflictMatrix(semester);
     res.status(200).json(matrixData);
   } catch (error) {
