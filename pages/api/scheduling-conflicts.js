@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { isCourseOffered } = require('../../utils/courseOffering.js');
 
 /**
  * Load all required data files for conflict analysis
@@ -329,8 +330,23 @@ function analyzeSchedulingConflicts(semester) {
   const { students, courseData, sectionData } = loadData();
   const courseEnrollments = getCoursesForSemester(students, semester);
   
-  // Get all courses planned by students for this semester
-  const courses = Object.values(courseEnrollments);
+  // Parse semester format (e.g., 'sp2026' -> 'Spring 2026')
+  const semesterMatch = semester.match(/(fa|sp)(\d{4})/);
+  if (!semesterMatch) {
+    throw new Error('Invalid semester format');
+  }
+  
+  const [, semesterType, yearStr] = semesterMatch;
+  const year = parseInt(yearStr);
+  const semesterName = semesterType === 'fa' ? 'Fall' : 'Spring';
+  
+  // Filter courses to only include those actually offered in this semester
+  // This ensures we only analyze conflicts that can actually occur
+  const offeredCourses = Object.values(courseEnrollments).filter(course => {
+    return isCourseOffered(course.course_id, semesterName, year);
+  });
+  
+  const courses = offeredCourses; // Use only offered courses for conflict analysis
   const conflicts = [];
   
   // Step 1: Check all pairs of courses for conflicts
@@ -395,7 +411,9 @@ function analyzeSchedulingConflicts(semester) {
   
   return {
     semester: semester,
-    conflicts: conflicts
+    conflicts: conflicts,
+    totalOffered: offeredCourses.length,
+    totalPlanned: Object.keys(courseEnrollments).length
   };
 }
 
