@@ -10,6 +10,8 @@
     "precombine": "node scripts/precombine.js && cp app/data/students.json public/students.json"
   },
   "dependencies": {
+    "@sendgrid/mail": "^8.1.6",
+    "dotenv": "^17.2.2",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
     "react": "19.1.0",

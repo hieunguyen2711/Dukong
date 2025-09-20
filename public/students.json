@@ -2774,5 +2774,90 @@
     "completedCredits": 15,
     "inProgressCredits": 3,
     "plannedCredits": 0
+  },
+  {
+    "id": "S031",
+    "name": "Timalma Zakaria",
+    "email": "zakariatimalma@gmail.com",
+    "gradYear": 2026,
+    "expectedGraduation": "sp2026",
+    "plan": {
+      "fa2024": {
+        "courses": [
+          {
+            "course_id": "C001",
+            "department": "CS",
+            "number": "101",
+            "title": "Introduction to Computer Science",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C002",
+            "department": "MATH",
+            "number": "201",
+            "title": "Calculus I",
+            "credits": 4,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 7,
+        "semesterStatus": "past"
+      },
+      "sp2025": {
+        "courses": [
+          {
+            "course_id": "C003",
+            "department": "CS",
+            "number": "102",
+            "title": "Data Structures",
+            "credits": 3,
+            "status": "taken"
+          },
+          {
+            "course_id": "C004",
+            "department": "ENG",
+            "number": "101",
+            "title": "English Composition",
+            "credits": 3,
+            "status": "taken"
+          }
+        ],
+        "semesterCredits": 6,
+        "semesterStatus": "past"
+      },
+      "fa2025": {
+        "courses": [
+          {
+            "course_id": "C005",
+            "department": "CS",
+            "number": "201",
+            "title": "Algorithms",
+            "credits": 3,
+            "status": "in_progress"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "current"
+      },
+      "sp2026": {
+        "courses": [
+          {
+            "course_id": "C006",
+            "department": "CS",
+            "number": "301",
+            "title": "Software Engineering",
+            "credits": 3,
+            "status": "planned"
+          }
+        ],
+        "semesterCredits": 3,
+        "semesterStatus": "future"
+      }
+    },
+    "totalCredits": 19,
+    "completedCredits": 13,
+    "inProgressCredits": 3,
+    "plannedCredits": 3
   }
 ]

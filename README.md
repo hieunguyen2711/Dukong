@@ -11,6 +11,8 @@ A comprehensive Next.js application for academic advisors to manage and visualiz
 - **Four-Year Plan Visualization**: Interactive semester-by-semester course planning
 - **Course Management**: Add, remove, and update planned courses
 - **Academic Progress Tracking**: Real-time credit calculations and completion status
+- **Email Alert System**: Send meeting requests to at-risk students via SendGrid
+- **Course Offering Validation**: Ensures courses are available in selected semesters
 - **Responsive Design**: Modern UI with Tailwind CSS and Lucide icons
 
 ### 🎯 Core Functionality
@@ -70,19 +72,39 @@ Dukong/
    npm install
    ```
 
-3. **Generate student data from CSV files**
+3. **Configure environment variables**
+
+   Copy the example environment file and add your SendGrid API key:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Edit `.env.local` and add your SendGrid API key:
+
+   ```
+   SENDGRID_API_KEY=SG.your_actual_sendgrid_api_key_here
+   ```
+
+   **Get a SendGrid API Key:**
+   - Sign up at [SendGrid](https://sendgrid.com)
+   - Go to Settings > API Keys
+   - Create a new API key with "Mail Send" permissions
+   - The API key must start with "SG." for proper validation
+
+4. **Generate student data from CSV files**
 
    ```bash
    node scripts/precombine.js
    ```
 
-4. **Start the development server**
+5. **Start the development server**
 
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    Navigate to `http://localhost:3000`
 
 ## Data Structure
@@ -184,6 +206,32 @@ Update course details in a student's plan.
 }
 ```
 
+### POST `/api/send-alert`
+
+Send a meeting request email to a student.
+
+```json
+{
+  "student": {
+    "id": "S001",
+    "name": "Mike Jones",
+    "email": "mike.jones@college.edu",
+    "completedCredits": 45,
+    "expectedGraduation": "Spring 2026"
+  },
+  "advisorName": "Dr. Smith",
+  "alertType": "meeting_request"
+}
+```
+
+### GET `/api/course-offerings`
+
+Get all course offering patterns from the offering.csv file.
+
+### GET `/api/available-courses?semester=Fall&year=2025`
+
+Get courses available for a specific semester and year.
+
 ## Usage Guide
 
 ### For Academic Advisors
@@ -210,6 +258,12 @@ Update course details in a student's plan.
    - Monitor total credits and completion status
    - View semester-by-semester credit distribution
    - Track progress toward graduation requirements
+
+5. **Email Alert System**
+   - **At-Risk Students**: Automatically identified based on credit progress
+   - **Individual Alerts**: Send meeting requests to specific students
+   - **Bulk Alerts**: Send meeting requests to all at-risk students
+   - **Rich Email Content**: Professional HTML emails with student progress details
 
 ### Key Features
 

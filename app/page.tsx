@@ -14,9 +14,16 @@ import {
   Eye,
   EyeOff,
   AlertTriangle,
+  Send,
+  Bell,
 } from "lucide-react";
 import SchedulingConflicts from "../components/SchedulingConflicts";
 import { useHighPriorityConflicts } from "../hooks/useHighPriorityConflicts";
+import {
+  isStudentAtRisk as checkStudentAtRisk,
+  sendStudentMeetingRequest,
+  sendBulkMeetingRequests,
+} from "../utils/emailAlerts";
 
 interface Student {
   id: string;
@@ -170,6 +177,13 @@ export default function Home() {
   const [filterProgress, setFilterProgress] = useState<string>("all");
   const { highPriorityCount } = useHighPriorityConflicts();
 
+  // Meeting request states
+  const [advisorName, setAdvisorName] = useState("");
+  const [sendingRequest, setSendingRequest] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -253,6 +267,61 @@ export default function Home() {
     setSearchQuery("");
   };
 
+  // Meeting request functions
+  const sendSingleMeetingRequest = async (student: Student) => {
+    if (!advisorName.trim()) {
+      setRequestMessage("Please enter your name as the advisor");
+      return;
+    }
+
+    setSendingRequest(true);
+    setRequestMessage("");
+
+    try {
+      await sendStudentMeetingRequest(student, advisorName, "meeting_request");
+      setRequestMessage(`Meeting request sent to ${student.name} successfully`);
+    } catch (error) {
+      setRequestMessage(
+        `Failed to send meeting request: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setSendingRequest(false);
+    }
+  };
+
+  const handleBulkMeetingRequests = async () => {
+    if (!advisorName.trim()) {
+      setRequestMessage("Please enter your name as the advisor");
+      return;
+    }
+
+    setSendingRequest(true);
+    setRequestMessage("");
+
+    try {
+      const result = await sendBulkMeetingRequests(students, advisorName);
+      if (result.success) {
+        setRequestMessage(
+          `Successfully sent meeting requests to ${result.sentCount} at-risk students`
+        );
+      } else {
+        setRequestMessage(
+          `Sent ${result.sentCount} requests, ${result.errorCount} failed`
+        );
+      }
+    } catch (error) {
+      setRequestMessage(
+        `Failed to send meeting requests: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setSendingRequest(false);
+    }
+  };
+
   const getGradYearColor = (gradYear: number) => {
     const currentYear = new Date().getFullYear();
     if (gradYear <= currentYear) return "text-red-600 bg-red-50";
@@ -321,6 +390,18 @@ export default function Home() {
 
             {/* Enhanced Search and Filter Controls */}
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              {/* Meeting Request Controls */}
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setShowRequestModal(true)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  title="Send meeting requests to all at-risk students"
+                >
+                  <Bell className="w-4 h-4" />
+                  <span className="hidden sm:inline">Request Meetings</span>
+                </button>
+              </div>
+
               {/* Search Component */}
               <div className="relative max-w-md w-full sm:w-auto">
                 <div className="relative">
@@ -531,7 +612,7 @@ export default function Home() {
                     120) *
                     100
                 );
-                const isAtRisk = isStudentAtRisk(student);
+                const isAtRisk = checkStudentAtRisk(student);
 
                 return (
                   <Link
@@ -685,10 +766,27 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <div className="mt-4 text-center">
+                      {/* Action Buttons */}
+                      <div className="mt-4 flex items-center justify-between">
                         <span className="text-blue-600 text-sm font-medium hover:text-blue-700 transition-colors duration-200">
                           View Four-Year Plan →
                         </span>
+                        {isAtRisk && (
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedStudent(student);
+                              setShowRequestModal(true);
+                            }}
+                            disabled={sendingRequest}
+                            className="flex items-center space-x-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors text-xs disabled:opacity-50"
+                            title="Send meeting request to this student"
+                          >
+                            <Send className="w-3 h-3" />
+                            <span>Meet</span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </Link>
@@ -787,6 +885,106 @@ export default function Home() {
         <div className="mt-12">
           <SchedulingConflicts />
         </div>
+
+        {/* Meeting Request Modal */}
+        {showRequestModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {selectedStudent
+                    ? `Send Meeting Request to ${selectedStudent.name}`
+                    : "Send Meeting Requests"}
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowRequestModal(false);
+                    setSelectedStudent(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="advisor-name"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Your Name (Advisor)
+                </label>
+                <input
+                  id="advisor-name"
+                  type="text"
+                  value={advisorName}
+                  onChange={(e) => setAdvisorName(e.target.value)}
+                  placeholder="Dr. Smith"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                />
+              </div>
+
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                <div className="flex items-center space-x-2 text-blue-800 mb-2">
+                  <Bell className="w-4 h-4" />
+                  <span className="font-medium">Meeting Request Summary</span>
+                </div>
+                <p className="text-sm text-blue-700">
+                  {selectedStudent
+                    ? `This will send a meeting request to ${selectedStudent.name} asking them to schedule a meeting with you.`
+                    : `This will send meeting requests to ${
+                        students.filter((s) => checkStudentAtRisk(s)).length
+                      } at-risk students asking them to schedule a meeting with you.`}
+                </p>
+              </div>
+
+              {requestMessage && (
+                <div
+                  className={`mb-4 p-3 rounded-lg ${
+                    requestMessage.includes("successfully") ||
+                    requestMessage.includes("Success")
+                      ? "bg-green-50 text-green-800 border border-green-200"
+                      : "bg-red-50 text-red-800 border border-red-200"
+                  }`}
+                >
+                  {requestMessage}
+                </div>
+              )}
+
+              <div className="flex items-center justify-end space-x-3">
+                <button
+                  onClick={() => setShowRequestModal(false)}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={
+                    selectedStudent
+                      ? () => sendSingleMeetingRequest(selectedStudent)
+                      : handleBulkMeetingRequests
+                  }
+                  disabled={sendingRequest || !advisorName.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+                >
+                  {sendingRequest ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>
+                        {selectedStudent ? "Send Request" : "Send Requests"}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
