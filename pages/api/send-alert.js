@@ -12,15 +12,17 @@ export default async function handler(req, res) {
     console.error("SENDGRID_API_KEY environment variable is not set");
     return res.status(500).json({
       message: "Email service not configured",
-      error: "SENDGRID_API_KEY environment variable is missing"
+      error: "SENDGRID_API_KEY environment variable is missing",
     });
   }
 
   if (!apiKey.startsWith("SG.")) {
-    console.error("Invalid SendGrid API key format. API key must start with 'SG.'");
+    console.error(
+      "Invalid SendGrid API key format. API key must start with 'SG.'"
+    );
     return res.status(500).json({
       message: "Email service not configured",
-      error: "Invalid SendGrid API key format"
+      error: "Invalid SendGrid API key format",
     });
   }
 
